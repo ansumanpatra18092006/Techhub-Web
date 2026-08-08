@@ -50,7 +50,7 @@ const featuredEvent = {
 }
 const gallery = ['https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=85', 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=85', 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1200&q=85', 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=85', 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=85']
 const contactInfo = [['Location', MapPin, 'GIET University, Gunupur, Odisha', null], ['Email', Mail, 'techhub@giet.edu', 'mailto:techhub@giet.edu'], ['Phone', Phone, '+91 XXXXX XXXXX', null]]
-const socialLinks = [['Instagram', Instagram, '#'], ['LinkedIn', Linkedin, '#'], ['GitHub', Github, '#']]
+const socialLinks = [['Instagram', Instagram, 'https://www.instagram.com/techub_gietu?igsh=d3FkdWEyNjE0dzM='], ['LinkedIn', Linkedin, 'https://www.linkedin.com/company/tech-hub-gietclub/'], ['GitHub', Github, '#']]
 const CONTACT_EMAIL = 'techhub@giet.edu'
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const galleryItems = [
