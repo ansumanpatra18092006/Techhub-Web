@@ -1,0 +1,85 @@
+TECHHUB WEB
+├── .gitignore
+├── components
+│   ├── Aurora.jsx
+│   ├── CountUp.jsx
+│   ├── DotField.jsx
+│   ├── DriftWall.jsx
+│   ├── MagicBento.jsx
+│   ├── Magnet.jsx
+│   ├── SpotlightCard.jsx
+│   └── ui
+│       └── button.tsx
+├── components.json
+├── generate_structure.py
+├── index.html
+├── lib
+│   └── utils.ts
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+├── pnpm-lock.yaml
+├── postcss.config.mjs
+├── project_structure.txt
+├── public
+│   ├── apple-icon.png
+│   ├── gallery
+│   ├── icon-dark-32x32.png
+│   ├── icon-light-32x32.png
+│   ├── icon.svg
+│   ├── placeholder-logo.png
+│   ├── placeholder-logo.svg
+│   ├── placeholder-user.jpg
+│   ├── placeholder.jpg
+│   └── placeholder.svg
+├── src
+│   ├── App.jsx
+│   ├── assets
+│   │   ├── events
+│   │   │   └── orientation.png
+│   │   ├── gallery
+│   │   └── projects
+│   │       ├── CampusConnect.png
+│   │       ├── green-route.png
+│   │       └── studysync.png
+│   ├── components
+│   │   ├── common
+│   │   │   ├── SectionTitle.jsx
+│   │   │   ├── SourcePaste.jsx
+│   │   │   └── SourceStyles.jsx
+│   │   ├── reactbits
+│   │   │   ├── AnimatedBeam.css
+│   │   │   ├── AnimatedBeam.jsx
+│   │   │   ├── Aurora.css
+│   │   │   ├── Aurora.jsx
+│   │   │   ├── Dock.css
+│   │   │   ├── Dock.jsx
+│   │   │   ├── GradientBeam.css
+│   │   │   ├── GradientBeam.jsx
+│   │   │   ├── TextPressure.css
+│   │   │   ├── TextPressure.jsx
+│   │   │   ├── WarpText.css
+│   │   │   └── WarpText.jsx
+│   │   ├── RefinedHome.jsx
+│   │   ├── ScrollReveal.jsx
+│   │   └── sections
+│   │       └── home
+│   │           ├── AboutPreview.jsx
+│   │           ├── Achievements.jsx
+│   │           ├── DomainsPreview.jsx
+│   │           ├── FeaturedProjects.jsx
+│   │           ├── GalleryPreview.jsx
+│   │           ├── JoinCTA.jsx
+│   │           ├── Journey.jsx
+│   │           ├── Stats.jsx
+│   │           ├── Testimonials.jsx
+│   │           ├── UpcomingEvents.jsx
+│   │           └── WhyJoin.jsx
+│   ├── hooks
+│   │   └── useInView.js
+│   ├── index.css
+│   ├── main.jsx
+│   └── styles
+│       └── globals.css
+├── tsconfig.json
+└── vite.config.js
