@@ -76,9 +76,9 @@ const featuredEvent = {
   description: 'Welcome to TechHub and discover every domain, meet seniors, explore projects, and begin your journey with the community.',
   image: orientationImg
 }
-const contactInfo = [['Location', MapPin, 'GIET University, Gunupur, Odisha', null], ['Email', Mail, 'techhub@giet.edu', 'mailto:techhub@giet.edu'], ['Phone', Phone, '+91 XXXXX XXXXX', null]]
+const contactInfo = [['Location', MapPin, 'GIET University, Gunupur, Odisha', null], ['Email', Mail, '24cse181.ansumanpatra@giet.edu', 'mailto:24cse181.ansumanpatra@giet.edu'], ['Phone', Phone, '+91 6371690323', null]]
 const socialLinks = [['Instagram', Instagram, 'https://www.instagram.com/techub_gietu?igsh=d3FkdWEyNjE0dzM='], ['LinkedIn', Linkedin, 'https://www.linkedin.com/company/tech-hub-gietclub/'], ['GitHub', Github, '#']]
-const CONTACT_EMAIL = 'techhub@giet.edu'
+const CONTACT_EMAIL = '24cse181.ansumanpatra@giet.edu'
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 // All 26 local TechHub gallery photos, in import order. DriftWall assigns
 // items to its columns internally, so keeping this flat and in-order lets
@@ -244,7 +244,7 @@ export default function RefinedHome() {
           />
         </div>
         <div className="grid-bg absolute inset-0 opacity-50" /><div className="absolute left-1/4 top-32 size-80 rounded-full bg-blue-600/10 blur-3xl" /><div className="absolute right-1/4 top-48 size-72 rounded-full bg-violet-600/10 blur-3xl" />
-        <div className="container relative grid items-center gap-14 lg:grid-cols-[1.02fr_.98fr] lg:gap-20"><div><Reveal className="[animation-delay:.3s]"><div className="eyebrow mb-6 inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-400/[.07] px-3 py-2"><span className="size-1.5 rounded-full bg-emerald-400" />Official technical club</div></Reveal><Reveal className="[animation-delay:.5s]"><h1 className="max-w-3xl text-5xl font-semibold leading-[1.02] tracking-[-.065em] text-white sm:text-7xl">Build <span className="text-blue-400">beyond</span><br className="hidden sm:block" /> the classroom.</h1></Reveal><Reveal className="[animation-delay:.7s]"><p className="muted mt-7 max-w-xl text-base leading-7 sm:text-lg">Join the university&apos;s premier technical community. <span className="text-slate-100">Build real-world software</span>, compete in hackathons, learn from seniors, and create projects that matter.</p></Reveal><div className="mt-8 flex flex-col gap-3 sm:flex-row"><Reveal className="[animation-delay:.9s]"><Magnet
+        <div className="container relative grid items-center gap-14 lg:grid-cols-[1.02fr_.98fr] lg:gap-20"><div><Reveal className="[animation-delay:.5s]"><h1 className="max-w-3xl text-5xl font-semibold leading-[1.02] tracking-[-.065em] text-white sm:text-7xl">Build <span className="text-blue-400">beyond</span><br className="hidden sm:block" /> the classroom.</h1></Reveal><Reveal className="[animation-delay:.7s]"><p className="muted mt-7 max-w-xl text-base leading-7 sm:text-lg">Join the university&apos;s premier technical community. <span className="text-slate-100">Build real-world software</span>, compete in hackathons, learn from seniors, and create projects that matter.</p></Reveal><div className="mt-8 flex flex-col gap-3 sm:flex-row"><Reveal className="[animation-delay:.9s]"><Magnet
           padding={60}
           magnetStrength={8}
         >
