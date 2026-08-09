@@ -1,0 +1,226 @@
+/* =========================================================
+   SplashScreen — premium TechHub intro overlay
+   Continuous ambient motion (particles, breathing logo, grid)
+   lives here as CSS keyframes for cheap GPU-composited looping;
+   the orchestrated phase sequence (fades, stagger, exit blur)
+   is driven by Framer Motion in SplashScreen.jsx.
+   ========================================================= */
+
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000; /* above header (50) and the WhatsApp float (1000) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #030712;
+}
+
+.splash-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(65% 65% at 50% 45%, black, transparent 90%);
+  -webkit-mask-image: radial-gradient(65% 65% at 50% 45%, black, transparent 90%);
+}
+
+.splash-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(38% 42% at 50% 42%, rgba(59, 130, 246, 0.16) 0%, transparent 70%),
+    radial-gradient(50% 50% at 60% 65%, rgba(139, 92, 246, 0.12) 0%, transparent 70%),
+    radial-gradient(50% 50% at 35% 65%, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
+}
+
+/* ---------------------------------------------------------
+   Floating background particles
+   --------------------------------------------------------- */
+.splash-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.splash-particle {
+  position: absolute;
+  border-radius: 9999px;
+  background: rgba(147, 197, 253, 0.55);
+  box-shadow: 0 0 6px 1px rgba(139, 92, 246, 0.4);
+  animation-name: splash-particle-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes splash-particle-drift {
+  0%   { transform: translate3d(0, 0, 0); opacity: 0.15; }
+  50%  { transform: translate3d(6px, -22px, 0); opacity: 0.6; }
+  100% { transform: translate3d(0, 0, 0); opacity: 0.15; }
+}
+
+/* ---------------------------------------------------------
+   Content column
+   --------------------------------------------------------- */
+.splash-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+/* Logo */
+.splash-logo-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-bottom: 2.25rem;
+}
+
+.splash-logo-glow {
+  position: absolute;
+  inset: -30px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.32) 0%, rgba(139, 92, 246, 0.18) 45%, transparent 75%);
+  filter: blur(18px);
+  animation: splash-logo-breathe 4s ease-in-out infinite;
+}
+
+.splash-logo-badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border-radius: 9999px;
+  background: linear-gradient(160deg, rgba(17, 24, 39, 0.9), rgba(11, 16, 32, 0.95));
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+    0 30px 60px -24px rgba(0, 0, 0, 0.85);
+  animation: splash-logo-breathe 4s ease-in-out infinite;
+}
+
+.splash-logo-img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+
+@keyframes splash-logo-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.045); }
+}
+
+/* Lines: TECHHUB / BUILD / LEARN / INNOVATE */
+.splash-lines {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.splash-line {
+  display: block;
+  font-family: var(--font-heading, 'Space Grotesk', system-ui, sans-serif);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #cbd5e1;
+  white-space: nowrap;
+}
+
+.splash-letter {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}
+
+.splash-line-brand {
+  font-size: clamp(1.9rem, 5vw, 3rem);
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+/* background-clip: text only paints an element's OWN text — since the
+   brand line's text now lives inside per-letter spans, the gradient has
+   to be applied to each letter individually, not the line wrapper. */
+.splash-line-brand .splash-letter {
+  background: linear-gradient(120deg, #93c5fd, #c4b5fd, #93c5fd);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: splash-brand-shimmer 5s ease-in-out infinite;
+}
+
+@keyframes splash-brand-shimmer {
+  0%, 100% { background-position: 0% 0; }
+  50%      { background-position: 100% 0; }
+}
+
+/* Quote */
+.splash-quote {
+  margin: 1.9rem 0 0;
+  font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(0.58rem, 0.9vw, 0.7rem);
+  color: #8b95a8;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+/* Loading bar */
+.splash-bar-wrap {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  width: min(260px, 60vw);
+}
+
+.splash-bar-track {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  border-radius: 9999px;
+  background: rgba(148, 163, 184, 0.14);
+  overflow: hidden;
+}
+
+.splash-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  box-shadow: 0 0 12px 1px rgba(139, 92, 246, 0.55);
+}
+
+.splash-percent {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: #64748b;
+}
+
+/* ---------------------------------------------------------
+   Accessibility
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .splash-particle,
+  .splash-logo-glow,
+  .splash-logo-badge,
+  .splash-line-brand .splash-letter {
+    animation: none;
+  }
+}

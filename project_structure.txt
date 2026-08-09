@@ -78,6 +78,8 @@ TECHHUB WEB
 │   │   │   └── WarpText.jsx
 │   │   ├── RefinedHome.jsx
 │   │   ├── ScrollReveal.jsx
+│   │   ├── SplashScreen.css
+│   │   ├── SplashScreen.jsx
 │   │   ├── WhatsAppFloat.css
 │   │   └── WhatsAppFloat.jsx
 │   ├── hooks
