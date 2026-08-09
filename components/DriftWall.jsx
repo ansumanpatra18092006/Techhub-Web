@@ -321,6 +321,7 @@ const DriftWall = ({
       className: cx(tileClass, activeId === id && 'is-active'),
       'data-tile-id': id,
       'data-col': colIndex,
+      'data-cursor': 'interactive',
       onFocus: () => activate(id, colIndex),
       onBlur: release
     };

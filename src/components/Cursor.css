@@ -1,0 +1,94 @@
+/* ---------------------------------------------------------------
+   Custom cursor — inner dot + eased outer ring.
+   The native OS cursor is always left visible (see Cursor.jsx —
+   there is no cursor:none override anywhere). The dot and ring are
+   purely additive visual layers on top of it.
+   Only `transform` and `opacity` are ever animated here: no layout
+   properties, so this composites on the GPU and stays cheap even
+   alongside Aurora / DotField / DriftWall / smooth scrolling.
+   --------------------------------------------------------------- */
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 2147483647;
+  opacity: 0;
+  border-radius: 50%;
+  will-change: transform;
+  transition: opacity 0.2s ease;
+}
+
+/* Inner dot — instant follow, purple/blue glow matching the site's accent. */
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, rgba(165, 180, 252, 0.95) 0%, rgba(99, 102, 241, 0.9) 55%, rgba(99, 102, 241, 0) 100%);
+  box-shadow: 0 0 10px 2px rgba(99, 102, 241, 0.5);
+  transition: opacity 0.2s ease, width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Outer ring — eased follow (handled in JS), noticeably slower/heavier
+   lag behind the dot for a smooth, weighted feel.
+   Visibility on ANY background is handled by layering, not color alone:
+     - a thin dark contact line  -> reads against light backgrounds
+     - a thin light inset line   -> reads against dark backgrounds
+     - an outer violet glow + an inner violet glow -> the "premium" layer
+     - a translucent glass fill with backdrop-filter for depth
+   None of this touches layout — border/background/box-shadow only,
+   composited via transform on the parent element. */
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+
+  border: 1.5px solid rgba(139, 92, 246, 0.75);
+  background: transparent;
+
+  box-shadow:
+    0 0 10px rgba(139, 92, 246, 0.25);
+
+  transition:
+    opacity 0.2s ease,
+    width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+
+/* --- Hover: plain reading text — dim slightly, no size change --- */
+.cursor-root[data-cursor-hover='text'] .cursor-dot,
+.cursor-root[data-cursor-hover='text'] .cursor-ring {
+  opacity: 0.55;
+}
+
+/* --- Press feedback: a small, elegant contraction, nothing gamey --- */
+.cursor-root[data-cursor-pressed='true'] .cursor-dot {
+  width: 5px;
+  height: 5px;
+}
+.cursor-root[data-cursor-pressed='true'] .cursor-ring {
+  width: 28px;
+  height: 28px;
+  border-color: rgba(139, 92, 246, 1);
+}
+
+/* Belt-and-braces: never show on coarse pointers or when the user
+   has asked for reduced motion, even if this stylesheet somehow
+   loads without the component's JS gate. */
+@media (pointer: coarse), (hover: none) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+}

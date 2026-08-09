@@ -260,6 +260,7 @@ export default function RefinedHome() {
       <section className="border-y border-white/[.07] bg-slate-950/30"><div className="container grid grid-cols-3 divide-x divide-white/[.07]">{stats.map(([num, suffix, label, Icon]) => (
         <div
           key={label}
+          data-cursor="interactive"
           className="group px-4 py-8 text-center transition-colors duration-300 hover:bg-white/[.02] sm:py-10"
         >
           <Icon size={18} className="mx-auto mb-3 text-blue-400/70 transition-colors duration-300 group-hover:text-blue-300" />

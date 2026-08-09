@@ -69,6 +69,7 @@ function StoryCard({ story }) {
         <figure
             className={`surface bento-card testimonial-card ms-card group rounded-2xl p-6 transition-all duration-300 ${t.ring} sm:p-7`}
             style={{ '--ms-glow': t.glow }}
+            data-cursor="interactive"
         >
             <Quote className={t.icon} size={20} />
             <blockquote className="mt-5 text-[15px] leading-7 text-slate-200">{story.quote}</blockquote>
