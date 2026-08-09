@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { AlertCircle, ArrowRight, BrainCircuit, Calendar, CheckCircle2, ChevronDown, Code2, GitBranch, Globe2, Landmark, Mail, MapPin, Menu, Phone, Quote, Rocket, Send, ShieldCheck, Sparkles, Target, Trophy, Users, X, Zap } from 'lucide-react'
+import { AlertCircle, ArrowRight, BrainCircuit, Calendar, CheckCircle2, ChevronDown, Code2, GitBranch, Globe2, Landmark, Mail, MapPin, Menu, Phone, Rocket, Send, ShieldCheck, Sparkles, Target, Trophy, Users, X, Zap } from 'lucide-react'
 import Aurora from "./reactbits/Aurora";
 import Magnet from "../../components/Magnet";
 import CountUp from "../../components/CountUp";
@@ -7,6 +7,7 @@ import SpotlightCard from "../../components/SpotlightCard";
 import DriftWall from "../../components/DriftWall";
 import DotField from "../../components/DotField";
 import ScrollReveal from "./ScrollReveal";
+import MemberStories from "./MemberStories";
 import useSmoothScroll from "../hooks/useSmoothScroll";
 import orientationImg from "../assets/events/orientation.png";
 import p1 from "../assets/gallery/p1.jpeg";
@@ -506,7 +507,7 @@ export default function RefinedHome() {
         </div>
       </section>
 
-      <section className="section"><div className="container"><SectionTitle eyebrow="Member stories" title="The people make the place" /><div className="bento-grid grid gap-4 md:grid-cols-2"><figure className="surface bento-card testimonial-card group rounded-2xl p-6 transition-transform duration-300 hover:border-blue-400/30 sm:p-8"><Quote className="text-blue-400" size={25} /><blockquote className="mt-6 text-lg leading-8 text-slate-200">TechHub gave me the confidence to stop waiting until I was ready. I shipped my first real product with people who became my closest friends.</blockquote><figcaption className="mt-8 flex items-center gap-3 border-t border-white/[.08] pt-5"><div className="grid size-9 place-items-center rounded-full bg-blue-500/20 text-sm font-semibold text-blue-200">AS</div><div><div className="text-sm font-semibold">Aditya Kumar Parida</div><div className="text-xs text-slate-500">Frontend team · 3rd year</div></div></figcaption></figure><figure className="surface bento-card testimonial-card group rounded-2xl p-6 transition-transform duration-300 hover:border-violet-400/30 sm:p-8"><Quote className="text-violet-400" size={25} /><blockquote className="mt-6 text-lg leading-8 text-slate-200">The best part is the culture of sharing. Every workshop feels like someone opening a door and saying, come build with us.</blockquote><figcaption className="mt-8 flex items-center gap-3 border-t border-white/[.08] pt-5"><div className="grid size-9 place-items-center rounded-full bg-violet-500/20 text-sm font-semibold text-violet-200">NP</div><div><div className="text-sm font-semibold">M Deepti</div><div className="text-xs text-slate-500">AI team · 3rd year</div></div></figcaption></figure></div></div></section>
+      <section className="section"><div className="container"><SectionTitle eyebrow="Member stories" title="The people make the place" /><MemberStories /></div></section>
 
       <section id="contact" className="section border-t border-white/[.07]"><div className="container"><SectionTitle eyebrow="Contact us" title="Let&apos;s Build Something Amazing Together" text="Have questions about TechHub? Interested in joining, collaborating, sponsoring an event, or simply want to know more? We&apos;d love to hear from you." /><div className="grid gap-5 lg:grid-cols-2 lg:gap-8"><div className="space-y-5"><Reveal className="space-y-4">{contactInfo.map(([label, Icon, value, href]) => <div key={label} className="surface group flex items-start gap-4 rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-1 hover:border-blue-400/30 sm:p-6"><span className="grid size-11 shrink-0 place-items-center rounded-xl bg-blue-500/15 text-blue-300 ring-1 ring-inset ring-blue-400/30"><Icon size={19} /></span><div className="min-w-0"><div className="font-heading text-sm font-semibold text-white">{label}</div>{href ? <a href={href} className="muted mt-1 block truncate text-sm hover:text-blue-300">{value}</a> : <p className="muted mt-1 text-sm leading-6">{value}</p>}</div></div>)}<div className="surface rounded-2xl p-5 sm:p-6"><div className="font-heading text-sm font-semibold text-white">Follow us</div><div className="mt-4 flex items-center gap-3">{socialLinks.map(([label, Icon, href]) => <a key={label} href={href} aria-label={label} className="grid size-11 place-items-center rounded-xl bg-blue-500/10 text-blue-300 transition-colors hover:bg-blue-500/20 hover:text-blue-200"><Icon size={18} /></a>)}</div></div></Reveal></div><Reveal><ContactForm /></Reveal></div></div></section>
     </main>
