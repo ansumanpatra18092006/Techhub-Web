@@ -342,6 +342,52 @@ a:focus-visible,button:focus-visible { outline:2px solid #93c5fd; outline-offset
 @keyframes navFade { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
 
 /* =========================================================
+   HEADER LOGO — subtle glow, pulse and animated underline so
+   the top bar doesn't read as flat/static.
+   ========================================================= */
+.brand-badge {
+  overflow: visible;
+}
+.brand-badge::before {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 14px;
+  background: radial-gradient(circle, rgba(96,165,250,.35), transparent 72%);
+  filter: blur(5px);
+  opacity: 0;
+  transition: opacity .4s ease;
+  pointer-events: none;
+}
+.brand-mark:hover .brand-badge::before {
+  opacity: 1;
+}
+.brand-badge {
+  animation: brand-pulse 3.6s ease-in-out infinite;
+}
+
+@keyframes brand-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(96,165,250,.28); }
+  50% { box-shadow: 0 0 0 5px rgba(96,165,250,0); }
+}
+
+.header-shimmer {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(96,165,250,.55) 35%, rgba(167,139,250,.55) 65%, transparent);
+  background-size: 220% 100%;
+  animation: border-gradient-shift 7s linear infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-badge { animation: none; }
+  .header-shimmer { animation: none; }
+}
+
+/* =========================================================
    ABOUT SECTION — premium interactive enhancements
    All new selectors/keyframes below. Nothing existing touched.
    ========================================================= */

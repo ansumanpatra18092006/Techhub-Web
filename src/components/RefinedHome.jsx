@@ -36,7 +36,6 @@ import p23 from "../assets/gallery/p23.jpeg";
 import p24 from "../assets/gallery/p24.jpeg";
 import p25 from "../assets/gallery/p25.jpeg";
 import p26 from "../assets/gallery/p26.jpeg";
-import techhubLogo from "../assets/tech-hub.png";
 
 // lucide-react 1.0 removed brand/logo icons (Github, Instagram, Linkedin, etc).
 // Lightweight stand-ins in the same stroke style, matching the lucide props API (size, className).
@@ -77,9 +76,9 @@ const featuredEvent = {
   description: 'Welcome to TechHub and discover every domain, meet seniors, explore projects, and begin your journey with the community.',
   image: orientationImg
 }
-const contactInfo = [['Location', MapPin, 'GIET University, Gunupur, Odisha', null], ['Email', Mail, '24cse181.ansumanpatra@giet.edu', 'mailto:24cse181.ansumanpatra@giet.edu'], ['Phone', Phone, '+91 6371690323', null]]
+const contactInfo = [['Location', MapPin, 'GIET University, Gunupur, Odisha', null], ['Email', Mail, 'techhub@giet.edu', 'mailto:techhub@giet.edu'], ['Phone', Phone, '+91 XXXXX XXXXX', null]]
 const socialLinks = [['Instagram', Instagram, 'https://www.instagram.com/techub_gietu?igsh=d3FkdWEyNjE0dzM='], ['LinkedIn', Linkedin, 'https://www.linkedin.com/company/tech-hub-gietclub/'], ['GitHub', Github, '#']]
-const CONTACT_EMAIL = '24cse181.ansumanpatra@giet.edu'
+const CONTACT_EMAIL = 'techhub@giet.edu'
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 // All 26 local TechHub gallery photos, in import order. DriftWall assigns
 // items to its columns internally, so keeping this flat and in-order lets
@@ -217,12 +216,9 @@ export default function RefinedHome() {
   return <div className="min-h-screen bg-[#030712] text-slate-100">
     <CursorGlow />
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[.08] bg-[#030712]/80 backdrop-blur-xl animate-[navFade_.6s_cubic-bezier(.16,1,.3,1)_both] [animation-delay:.2s]">
+      <div className="header-shimmer" />
       <div className="container flex h-[4.5rem] items-center justify-between">
-        <a href="#top" className="flex items-center gap-3" aria-label="TechHub home"><img
-          src={techhubLogo}
-          alt="TechHub Logo"
-          className="h-11 w-11 object-contain"
-        /><span className="font-heading text-lg font-semibold tracking-tight">TECH<span className="text-blue-400">'HUB</span></span></a>
+        <a href="#top" className="brand-mark group relative flex items-center gap-3" aria-label="TechHub home"><span className="brand-badge relative grid size-9 place-items-center rounded-xl bg-blue-500/15 text-blue-300 ring-1 ring-inset ring-blue-400/30"><Code2 size={19} className="transition-transform duration-500 ease-out group-hover:-rotate-[14deg] group-hover:scale-110" /></span><span className="font-heading text-lg font-semibold tracking-tight text-slate-100 transition-colors duration-300 group-hover:text-white">TECH<span className="text-blue-400">'HUB</span></span></a>
         <nav className="hidden items-center gap-7 md:flex" aria-label="Primary navigation">{nav.map(([label, href]) => <a key={label} href={href} className="text-sm text-slate-400 transition-colors hover:text-white">{label}</a>)}</nav>
         <div className="hidden md:block"><Magnet
           padding={50}

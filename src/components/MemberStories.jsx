@@ -22,37 +22,109 @@ const THEMES = {
 }
 
 const DEFAULT_STORIES = [
-    { quote: 'TechHub gave me the confidence to stop waiting until I was ready. I shipped my first real product with people who became my closest friends.', name: 'Aditya Kumar Parida', role: 'Frontend team · 3rd year', initials: 'AKP', theme: 'blue' },
-    { quote: 'The best part is the culture of sharing. Every workshop feels like someone opening a door and saying, come build with us.', name: 'M Deepti', role: 'Non-Technical team · 3rd year', initials: 'MD', theme: 'violet' },
-    { quote: 'I walked in knowing nothing about security and walked out running my own CTF practice sessions for juniors.', name: 'Biswajeet Sahu', role: 'Web Development team · 3rd year', initials: 'BS', theme: 'emerald' },
-    { quote: 'Open source felt intimidating until TechHub made my first pull request a group activity instead of a solo leap.', name: 'Pratikshya Panda', role: 'Graphics Design · 3rd year', initials: 'PP', theme: 'amber' },
-    { quote: 'Every teammate here treats "I don\u2019t know yet" as the start of a good conversation, not a weakness.', name: 'Asish Kumar Dhal', role: 'Backend team · 3rd year', initials: 'AKD', theme: 'blue' },
-    { quote: 'We shipped a hackathon project in 30 hours that turned into an actual internship offer. Wild.', name: 'Dipesh Jha', role: 'Fullstack · 3rd year', initials: 'DJ', theme: 'violet' },
-    { quote: 'Mentorship here isn\u2019t a program, it\u2019s just how seniors treat new members from day one.', name: 'Debasish Dash', role: 'Management team · 4th year', initials: 'DD', theme: 'emerald' },
-    { quote: 'I found my co-founders in a workshop breakout room. Still building with them two years later.', name: 'Tapas Ranjan', role: 'UI/UX team · 3rd year', initials: 'TR', theme: 'amber' },
-    { quote: 'The domain teams gave structure to what used to be scattered late-night YouTube tutorials.', name: 'Smruti Ranjan Kabi', role: 'Technical team · 4th year', initials: 'SRK', theme: 'blue' },
-    { quote: 'Leading a workshop for the first time taught me more than the three months I spent preparing for it.', name: 'Mayank Mishra', role: 'Cybersecurity · 3rd year', initials: 'MM', theme: 'violet' },
-    { quote: 'TechHub is the rare place where "let\u2019s just try it" is actually encouraged, not just said.', name: 'Ansuman Patra', role: 'Machine Learning · 3rd year', initials: 'AP', theme: 'emerald' },
-    { quote: 'The portfolio I built through club projects got me more interview callbacks than my resume did.', name: 'Arati Patra', role: 'Technical team · 3rd year', initials: 'AP', theme: 'amber' },
     {
-        quote: 'The first event I attended felt overwhelming. By the second one, I was volunteering. By the third, I was leading a team.',
-        name: 'Adhiraj ',
-        role: 'ML Team · 3rd year',
-        initials: 'AP',
+        quote: 'My first TechHub project failed completely. That experience taught me more about development, teamwork, and debugging than any classroom assignment ever could.',
+        name: 'Aditya Kumar Parida',
+        role: 'Frontend Team · 3rd Year',
+        initials: 'AKP',
         theme: 'blue'
     },
     {
-        quote: 'What surprised me most was how accessible everyone was. Seniors reviewed my work, shared resources, and genuinely wanted me to succeed.',
-        name: 'Aditya Vajpayee',
-        role: 'UI/UX Team · 3rd year',
-        initials: 'PD',
+        quote: 'Being part of the non-technical team showed me that great events are built through planning, communication, and countless small details behind the scenes.',
+        name: 'M Deepti',
+        role: 'Non-Technical Team · 3rd Year',
+        initials: 'MD',
         theme: 'violet'
     },
     {
-        quote: 'Before joining TechHub, I learned technologies. After joining, I learned how to build products, collaborate, and solve real problems.',
+        quote: 'Building websites for club projects gave me practical experience that tutorials alone never could. Seeing people use something I built felt incredible.',
+        name: 'Biswajeet Sahu',
+        role: 'Web Development Team · 3rd Year',
+        initials: 'BS',
+        theme: 'emerald'
+    },
+    {
+        quote: 'Design reviews from seniors completely changed how I approach creativity. I learned that good design is solving problems, not just making things look beautiful.',
+        name: 'Pratikshya Panda',
+        role: 'Graphics Design Team · 3rd Year',
+        initials: 'PP',
+        theme: 'amber'
+    },
+    {
+        quote: 'The backend team taught me how systems actually work behind the interface. APIs, databases, and architecture finally started making sense.',
+        name: 'Asish Kumar Dhal',
+        role: 'Backend Team · 3rd Year',
+        initials: 'AKD',
+        theme: 'blue'
+    },
+    {
+        quote: 'Late-night hackathon sessions with the team pushed me further than any individual project. We learned, built, failed, and shipped together.',
+        name: 'Dipesh Jha',
+        role: 'Fullstack Developer · 3rd Year',
+        initials: 'DJ',
+        theme: 'violet'
+    },
+    {
+        quote: 'Managing teams and coordinating events taught me leadership in a way no textbook ever could. Every event was a lesson in responsibility.',
+        name: 'Debasish Dash',
+        role: 'Management Team · 4th Year',
+        initials: 'DD',
+        theme: 'emerald'
+    },
+    {
+        quote: 'Working on UI/UX projects helped me understand how people interact with technology. Good design starts with empathy, not software.',
+        name: 'Tapas Ranjan',
+        role: 'UI/UX Team · 3rd Year',
+        initials: 'TR',
+        theme: 'amber'
+    },
+    {
+        quote: 'The technical team gave me structure and direction. Instead of randomly learning online, I finally had mentors and a roadmap to follow.',
+        name: 'Smruti Ranjan Kabi',
+        role: 'Technical Team · 4th Year',
+        initials: 'SRK',
+        theme: 'blue'
+    },
+    {
+        quote: 'CTFs and security workshops introduced me to a completely different side of technology. Cybersecurity went from curiosity to passion.',
+        name: 'Mayank Mishra',
+        role: 'Cybersecurity Team · 3rd Year',
+        initials: 'MM',
+        theme: 'violet'
+    },
+    {
+        quote: 'Training machine learning models is exciting, but learning how to turn them into useful solutions is what TechHub really taught me.',
+        name: 'Ansuman Patra',
+        role: 'Machine Learning Team · 3rd Year',
+        initials: 'AP',
+        theme: 'emerald'
+    },
+    {
+        quote: 'The projects I worked on through the club became the strongest part of my portfolio. They gave me real stories to talk about in interviews.',
+        name: 'Arati Patra',
+        role: 'Technical Team · 3rd Year',
+        initials: 'ARP',
+        theme: 'amber'
+    },
+    {
+        quote: 'Joining the ML team exposed me to practical applications of AI. Building models with teammates was far more rewarding than learning alone.',
+        name: 'Adhiraj',
+        role: 'ML Team · 3rd Year',
+        initials: 'AD',
+        theme: 'blue'
+    },
+    {
+        quote: 'Every design critique helped me improve faster than I imagined. The feedback culture here pushes you to become better with every project.',
+        name: 'Aditya Vajpayee',
+        role: 'UI/UX Team · 3rd Year',
+        initials: 'AV',
+        theme: 'violet'
+    },
+    {
+        quote: 'Developing applications for real users taught me to think beyond features and focus on reliability, usability, and impact.',
         name: 'Ashutosh Sahu',
-        role: 'App Development · 2nd year',
-        initials: 'RM',
+        role: 'App Development Team · 2nd Year',
+        initials: 'AS',
         theme: 'emerald'
     }
 ]
