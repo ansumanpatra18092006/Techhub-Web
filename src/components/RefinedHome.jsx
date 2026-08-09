@@ -36,6 +36,7 @@ import p23 from "../assets/gallery/p23.jpeg";
 import p24 from "../assets/gallery/p24.jpeg";
 import p25 from "../assets/gallery/p25.jpeg";
 import p26 from "../assets/gallery/p26.jpeg";
+import techhubLogo from "../assets/tech-hub.png";
 
 // lucide-react 1.0 removed brand/logo icons (Github, Instagram, Linkedin, etc).
 // Lightweight stand-ins in the same stroke style, matching the lucide props API (size, className).
@@ -217,7 +218,11 @@ export default function RefinedHome() {
     <CursorGlow />
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[.08] bg-[#030712]/80 backdrop-blur-xl animate-[navFade_.6s_cubic-bezier(.16,1,.3,1)_both] [animation-delay:.2s]">
       <div className="container flex h-[4.5rem] items-center justify-between">
-        <a href="#top" className="flex items-center gap-3" aria-label="TechHub home"><span className="grid size-9 place-items-center rounded-xl bg-blue-500/15 text-blue-300 ring-1 ring-inset ring-blue-400/30"><Code2 size={19} /></span><span className="font-heading text-lg font-semibold tracking-tight">TECH<span className="text-blue-400">'HUB</span></span></a>
+        <a href="#top" className="flex items-center gap-3" aria-label="TechHub home"><img
+          src={techhubLogo}
+          alt="TechHub Logo"
+          className="h-11 w-11 object-contain"
+        /><span className="font-heading text-lg font-semibold tracking-tight">TECH<span className="text-blue-400">'HUB</span></span></a>
         <nav className="hidden items-center gap-7 md:flex" aria-label="Primary navigation">{nav.map(([label, href]) => <a key={label} href={href} className="text-sm text-slate-400 transition-colors hover:text-white">{label}</a>)}</nav>
         <div className="hidden md:block"><Magnet
           padding={50}
