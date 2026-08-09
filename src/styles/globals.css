@@ -18,6 +18,11 @@
 :root { color-scheme: dark; --bg:#030712; --surface:#0b1020; --card:#111827; --line:rgba(148,163,184,.16); --muted:#a7b0c0; --text:#f8fafc; --blue:#3b82f6; --purple:#8b5cf6; --section:clamp(4.5rem,8vw,8rem); }
 * { box-sizing:border-box; }
 html { background:var(--bg); scroll-behavior:smooth; }
+
+/* Fixed header is 4.5rem (72px) tall — give anchor targets breathing
+   room so scrollIntoView()/hash navigation doesn't land sections
+   partially hidden underneath it. */
+section[id] { scroll-margin-top: 6rem; }
 body { margin:0; min-width:320px; overflow-x:hidden; background:var(--bg); color:var(--text); font-family:var(--font-sans); -webkit-font-smoothing:antialiased; }
 body::selection { background:rgba(59,130,246,.35); }
 h1,h2,h3,h4 { font-family:var(--font-heading); letter-spacing:-.04em; }

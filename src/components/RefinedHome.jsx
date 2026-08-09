@@ -67,7 +67,7 @@ const stats = [
   [100, '%', 'student-led', ShieldCheck]
 ]
 
-const domains = [['01', 'Web & App Development', 'From first commit to production-ready products.', Code2], ['02', 'AI & Machine Learning', 'Explore intelligent systems with practical experiments.', BrainCircuit], ['03', 'Cybersecurity', 'Learn to build resilient systems and think defensively.', ShieldCheck], ['04', 'Open Source', 'Collaborate in public and make your work count.', Globe2]]
+const domains = [['01', 'Web & App Development', 'From first commit to production-ready products.', Code2], ['02', 'AI & Machine Learning', 'Explore intelligent systems with practical experiments.', BrainCircuit], ['03', 'Cybersecurity', 'Learn to build resilient systems and think defensively.', ShieldCheck], ['04', 'Data Science', 'Extract patterns, build dashboards, and make data-driven decisions.', Globe2]]
 const REGISTRATION_LINK = "https://YOUR_GOOGLE_FORM_LINK"
 const featuredEvent = {
   title: 'TechHub Orientation 2026',
@@ -103,6 +103,13 @@ const galleryItems = galleryImages.map((image, i) => ({
 function Button({ children, outline = false, href = '#contact' }) { return <a href={href} className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold transition-all ${outline ? 'border border-slate-700 bg-slate-950/30 text-slate-200 hover:border-blue-400/70 hover:bg-slate-900' : 'bg-blue-500 text-white shadow-[0_12px_30px_-12px_rgba(59,130,246,.9)] hover:bg-blue-400'}`}>{children}</a> }
 function SectionTitle({ eyebrow, title, text }) { return <div className="mx-auto mb-12 max-w-2xl text-center"><div className="eyebrow mb-4">{eyebrow}</div><h2 className="section-title-glow relative text-3xl font-semibold text-balance text-white sm:text-5xl"><span className="section-title-shimmer">{title}</span></h2>{text && <p className="muted mt-5 text-base leading-7">{text}</p>}</div> }
 function Reveal({ children, className = '' }) { return <div className={`animate-[rise_.7s_cubic-bezier(.16,1,.3,1)_both] ${className}`}>{children}</div> }
+
+// Scrolls to a section by id, accounting for the fixed header via CSS
+// scroll-margin-top on the target (see .section[id] rule in globals.css).
+// Falls back silently if the target isn't present.
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 
 // Faint cursor-following glow, desktop only. Purely visual, sits behind
 // content (no z-index above sections), pointer-events disabled throughout.
@@ -402,7 +409,7 @@ export default function RefinedHome() {
             waveAmplitude={0}
           />
         </div>
-        <div className="container relative z-10"><SectionTitle eyebrow="Explore your edge" title="A domain for every kind of builder" text="Start with what excites you. Build the skills and confidence to go further." /><div className="bento-grid grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{domains.map(([number, title, text, Icon], i) => <ScrollReveal key={title} delay={i * 80}><div className="surface bento-card domain-card group h-full rounded-2xl p-5 transition-transform duration-300 sm:p-6"><div className="flex items-start justify-between"><Icon size={23} className="domain-icon text-blue-400" /><span className="font-mono text-xs text-slate-600">{number}</span></div><h3 className="mt-12 font-heading text-lg font-semibold text-white">{title}</h3><p className="muted mt-2 text-sm leading-6">{text}</p><ArrowRight size={16} className="mt-5 text-slate-600 transition-transform group-hover:translate-x-1 group-hover:text-blue-300" /></div></ScrollReveal>)}</div></div></section>
+        <div className="container relative z-10"><SectionTitle eyebrow="Explore your edge" title="A domain for every kind of builder" text="Start with what excites you. Build the skills and confidence to go further." /><div className="bento-grid grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{domains.map(([number, title, text, Icon], i) => <ScrollReveal key={title} delay={i * 80}><div role="button" tabIndex={0} onClick={() => scrollToSection('events')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollToSection('events') } }} aria-label={`View events for ${title}`} className="surface bento-card domain-card group h-full cursor-pointer rounded-2xl p-5 transition-transform duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 sm:p-6"><div className="flex items-start justify-between"><Icon size={23} className="domain-icon text-blue-400" /><span className="font-mono text-xs text-slate-600">{number}</span></div><h3 className="mt-12 font-heading text-lg font-semibold text-white">{title}</h3><p className="muted mt-2 text-sm leading-6">{text}</p><ArrowRight size={16} className="mt-5 text-slate-600 transition-transform group-hover:translate-x-1 group-hover:text-blue-300" /></div></ScrollReveal>)}</div></div></section>
 
       <section className="section relative overflow-hidden section-fade-top lighting-whyjoin">
         <div
