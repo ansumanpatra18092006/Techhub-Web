@@ -1,11 +1,9 @@
 TECHHUB WEB
 ├── .gitignore
 ├── components
-│   ├── Aurora.jsx
 │   ├── CountUp.jsx
 │   ├── DotField.jsx
 │   ├── DriftWall.jsx
-│   ├── MagicBento.jsx
 │   ├── Magnet.jsx
 │   ├── SpotlightCard.jsx
 │   └── ui
@@ -15,7 +13,6 @@ TECHHUB WEB
 ├── index.html
 ├── lib
 │   └── utils.ts
-├── next.config.mjs
 ├── package-lock.json
 ├── package.json
 ├── pnpm-lock.yaml
@@ -37,46 +34,48 @@ TECHHUB WEB
 │   ├── assets
 │   │   ├── events
 │   │   │   └── orientation.png
-│   │   ├── gallery
-│   │   └── projects
-│   │       ├── CampusConnect.png
-│   │       ├── green-route.png
-│   │       └── studysync.png
+│   │   └── gallery
+│   │       ├── p1.jpeg
+│   │       ├── p10.jpeg
+│   │       ├── p11.jpeg
+│   │       ├── p12.jpeg
+│   │       ├── p13.jpeg
+│   │       ├── p14.jpeg
+│   │       ├── p15.jpeg
+│   │       ├── p16.jpeg
+│   │       ├── p17.jpeg
+│   │       ├── p18.jpeg
+│   │       ├── p19.jpeg
+│   │       ├── p2.jpeg
+│   │       ├── p20.jpeg
+│   │       ├── p21.jpeg
+│   │       ├── p22.jpeg
+│   │       ├── p23.jpeg
+│   │       ├── p24.jpeg
+│   │       ├── p25.jpeg
+│   │       ├── p26.jpeg
+│   │       ├── p3.jpeg
+│   │       ├── p4.jpeg
+│   │       ├── p5.jpeg
+│   │       ├── p6.jpeg
+│   │       ├── p7.jpeg
+│   │       ├── p8.jpeg
+│   │       └── p9.jpeg
 │   ├── components
 │   │   ├── common
 │   │   │   ├── SectionTitle.jsx
 │   │   │   ├── SourcePaste.jsx
 │   │   │   └── SourceStyles.jsx
 │   │   ├── reactbits
-│   │   │   ├── AnimatedBeam.css
-│   │   │   ├── AnimatedBeam.jsx
 │   │   │   ├── Aurora.css
 │   │   │   ├── Aurora.jsx
-│   │   │   ├── Dock.css
-│   │   │   ├── Dock.jsx
-│   │   │   ├── GradientBeam.css
-│   │   │   ├── GradientBeam.jsx
-│   │   │   ├── TextPressure.css
-│   │   │   ├── TextPressure.jsx
 │   │   │   ├── WarpText.css
 │   │   │   └── WarpText.jsx
 │   │   ├── RefinedHome.jsx
-│   │   ├── ScrollReveal.jsx
-│   │   └── sections
-│   │       └── home
-│   │           ├── AboutPreview.jsx
-│   │           ├── Achievements.jsx
-│   │           ├── DomainsPreview.jsx
-│   │           ├── FeaturedProjects.jsx
-│   │           ├── GalleryPreview.jsx
-│   │           ├── JoinCTA.jsx
-│   │           ├── Journey.jsx
-│   │           ├── Stats.jsx
-│   │           ├── Testimonials.jsx
-│   │           ├── UpcomingEvents.jsx
-│   │           └── WhyJoin.jsx
+│   │   └── ScrollReveal.jsx
 │   ├── hooks
-│   │   └── useInView.js
+│   │   ├── useInView.js
+│   │   └── useSmoothScroll.js
 │   ├── index.css
 │   ├── main.jsx
 │   └── styles

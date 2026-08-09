@@ -56,10 +56,20 @@ const DriftWall = ({
   const pointerDampedRef = useRef({ x: 0, y: 0 });
   const lastTsRef = useRef(null);
 
-  const [containerHeight, setContainerHeight] = useState(600);
+  const [containerHeight, setContainerHeight] = useState(0);
   const [activeId, setActiveId] = useState(null);
   const activeIdRef = useRef(null);
   const [reduced, setReduced] = useState(false);
+
+  // Measure the real height synchronously before first paint so `copies`
+  // is computed once with the true container size — avoids a visible
+  // pop-in of extra duplicated tiles right after mount (was previously
+  // guessed at 600 and corrected later via ResizeObserver).
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+    const h = containerRef.current.getBoundingClientRect().height;
+    if (h > 0) setContainerHeight(h);
+  }, []);
 
   useEffect(() => {
     setReduced(prefersReducedMotion());
@@ -77,9 +87,20 @@ const DriftWall = ({
 
   const columnMeta = useMemo(() => {
     const unit = tileHeight + gap;
+    // The plane is rendered tilted (rotateX/rotateY) and scaled 1.18x
+    // under perspective — both stretch the effective vertical travel a
+    // viewer sees beyond the flat containerHeight. On top of that, a
+    // small buffer * ceil() can round very differently for columns with
+    // slightly different item counts (e.g. 6 vs 7 items), leaving some
+    // columns with far less safety margin than others even though the
+    // formula "looks" generous. Use a large, fixed-floor multiplier so
+    // every column gets several containerHeights of margin regardless
+    // of item-count rounding — this is the fix for columns visibly
+    // running out of duplicated content mid-scroll.
+    const effectiveHeight = containerHeight * 1.18; // matches hardcoded plane scale
     return columnItems.map(col => {
       const copyHeight = Math.max(unit, col.length * unit);
-      const copies = Math.max(2, Math.ceil((containerHeight * 1.6) / copyHeight) + 1);
+      const copies = Math.max(3, Math.ceil((effectiveHeight * 3.5) / copyHeight) + 2);
       return { copyHeight, copies };
     });
   }, [columnItems, tileHeight, gap, containerHeight]);
@@ -87,7 +108,11 @@ const DriftWall = ({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     const ro = new ResizeObserver(([entry]) => {
-      setContainerHeight(entry.contentRect.height || 600);
+      const h = entry.contentRect.height || 600;
+
+      setContainerHeight(prev =>
+        Math.abs(prev - h) > 1 ? h : prev
+      );
     });
     ro.observe(containerRef.current);
     return () => ro.disconnect();
@@ -102,9 +127,22 @@ const DriftWall = ({
   }, [columnItems, speed, direction, variance]);
 
   useEffect(() => {
-    offsetsRef.current = columnMeta.map((meta, c) => meta.copyHeight * ((c * 0.37) % 1));
-    velocitiesRef.current = columnItems.map(() => 0);
-  }, [columnMeta, columnItems]);
+    columnMeta.forEach((meta, c) => {
+      if (offsetsRef.current[c] == null) {
+        offsetsRef.current[c] =
+          meta.copyHeight * ((c * 0.37) % 1);
+      } else {
+        offsetsRef.current[c] =
+          ((offsetsRef.current[c] % meta.copyHeight) +
+            meta.copyHeight) %
+          meta.copyHeight;
+      }
+
+      if (velocitiesRef.current[c] == null) {
+        velocitiesRef.current[c] = 0;
+      }
+    });
+  }, [columnMeta]);
 
   const applyPlaneTransform = useCallback(
     (px, py) => {
@@ -206,9 +244,16 @@ const DriftWall = ({
     release();
   }, [release]);
 
+  // Top/bottom-only fade, independent of horizontal position. A radial
+  // ellipse (previous attempt) computes visibility from combined x+y
+  // distance from center, so in a wide, short gallery box the outer
+  // columns run out of horizontal "budget" and fade to nothing almost
+  // immediately above/below vertical-center, while center columns stay
+  // fully visible — exactly the "left columns empty out" bug. Fading
+  // only the vertical axis makes every column behave identically,
+  // regardless of how wide the gallery is.
   const maskStyle =
-    'radial-gradient(ellipse 78% 82% at 50% 46%, #000 var(--dw-edge), transparent 100%), ' +
-    'linear-gradient(to top, #000 var(--dw-edge), transparent 100%)';
+    'linear-gradient(to bottom, transparent 0%, #000 var(--dw-fade), #000 calc(100% - var(--dw-fade)), transparent 100%)';
 
   const cssVars = useMemo(
     () => ({
@@ -220,13 +265,14 @@ const DriftWall = ({
       '--dw-dim': dim,
       '--dw-gray': grayscale ? 1 : 0,
       '--dw-overlay': overlayColor,
-      '--dw-edge': `${Math.max(0, (1 - fade) * 100)}%`,
+      // Size of the top and bottom fade bands, as a % of container
+      // height. Clamped 4%-35% so `fade` can't collapse the visible
+      // area or, at the low end, produce a hard visible seam.
+      '--dw-fade': `${Math.min(35, Math.max(4, fade * 35))}%`,
       perspective: `${perspective}px`,
       perspectiveOrigin: '50% 50%',
       WebkitMaskImage: maskStyle,
       maskImage: maskStyle,
-      WebkitMaskComposite: 'source-in',
-      maskComposite: 'intersect',
       ...style
     }),
     [tileWidth, tileHeight, gap, radius, lift, dim, grayscale, overlayColor, fade, perspective, maskStyle, style]

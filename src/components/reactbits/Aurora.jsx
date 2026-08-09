@@ -114,6 +114,11 @@ export default function Aurora(props) {
     propsRef.current = props;
 
     const ctnDom = useRef(null);
+    // Tracks on-screen state so the render loop can stop scheduling new
+    // frames entirely once Aurora scrolls out of view, instead of
+    // rendering a full-resolution shader forever regardless of whether
+    // anyone can see it.
+    const isVisibleRef = useRef(true);
 
     useEffect(() => {
         const ctn = ctnDom.current;
@@ -168,8 +173,29 @@ export default function Aurora(props) {
         const mesh = new Mesh(gl, { geometry, program });
         ctn.appendChild(gl.canvas);
 
+        // Stop rendering entirely once the canvas scrolls out of the
+        // viewport (with a margin so it's already running again by the
+        // time it scrolls back in), and resume when it comes back.
+        // rootMargin buffers ~1 viewport above/below so there's no
+        // visible pop when scrolling back to the hero.
         let animateId = 0;
+        const io = new IntersectionObserver(
+            ([entry]) => {
+                const wasVisible = isVisibleRef.current;
+                isVisibleRef.current = entry.isIntersecting;
+                if (entry.isIntersecting && !wasVisible && !animateId) {
+                    animateId = requestAnimationFrame(update);
+                }
+            },
+            { rootMargin: '100% 0px' }
+        );
+        io.observe(ctn);
+
         const update = t => {
+            if (!isVisibleRef.current) {
+                animateId = 0; // stop scheduling — IO callback restarts us on re-entry
+                return;
+            }
             animateId = requestAnimationFrame(update);
             const { time = t * 0.01, speed = 1.0 } = propsRef.current;
             program.uniforms.uTime.value = time * speed * 0.1;
@@ -187,7 +213,8 @@ export default function Aurora(props) {
         resize();
 
         return () => {
-            cancelAnimationFrame(animateId);
+            io.disconnect();
+            if (animateId) cancelAnimationFrame(animateId);
             window.removeEventListener('resize', resize);
             if (ctn && gl.canvas.parentNode === ctn) {
                 ctn.removeChild(gl.canvas);

@@ -38,6 +38,12 @@ const DotField = memo(({
     const ctx = canvas.getContext('2d', { alpha: true });
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let resizeTimer;
+    // Tracks on-screen state so the rAF loop and the speed-sampling
+    // interval can both fully stop when this instance scrolls out of
+    // view, instead of redrawing ~1000 dots with per-dot trig every
+    // frame forever regardless of visibility. With 3 DotField instances
+    // on the page, at most one is ever likely to be on-screen at once.
+    let isVisible = true;
 
     function resize() {
       clearTimeout(resizeTimer);
@@ -92,6 +98,7 @@ const DotField = memo(({
     }
 
     function updateMouseSpeed() {
+      if (!isVisible) return;
       const m = mouseRef.current;
       const dx = m.prevX - m.x;
       const dy = m.prevY - m.y;
@@ -107,6 +114,10 @@ const DotField = memo(({
     let frameCount = 0;
 
     function tick() {
+      if (!isVisible) {
+        rafRef.current = null; // stop scheduling — IO callback restarts us on re-entry
+        return;
+      }
       frameCount++;
       const dots = dotsRef.current;
       const m = mouseRef.current;
@@ -208,19 +219,32 @@ const DotField = memo(({
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     rafRef.current = requestAnimationFrame(tick);
 
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisible;
+        isVisible = entry.isIntersecting;
+        if (isVisible && !wasVisible && !rafRef.current) {
+          rafRef.current = requestAnimationFrame(tick);
+        }
+      },
+      { rootMargin: '100% 0px' }
+    );
+    io.observe(canvas.parentElement);
+
     rebuildRef.current = () => {
       const { w, h } = sizeRef.current;
       if (w > 0 && h > 0) buildDots(w, h);
     };
 
     return () => {
+      io.disconnect();
       cancelAnimationFrame(rafRef.current);
       clearInterval(speedInterval);
       clearTimeout(resizeTimer);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

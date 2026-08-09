@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { AlertCircle, ArrowRight, BrainCircuit, Calendar, CheckCircle2, ChevronDown, Code2, GitBranch, Globe2, Landmark, Mail, MapPin, Menu, Phone, Quote, Rocket, Send, ShieldCheck, Sparkles, Target, Trophy, Users, X, Zap } from 'lucide-react'
 import Aurora from "./reactbits/Aurora";
 import Magnet from "../../components/Magnet";
@@ -7,7 +7,34 @@ import SpotlightCard from "../../components/SpotlightCard";
 import DriftWall from "../../components/DriftWall";
 import DotField from "../../components/DotField";
 import ScrollReveal from "./ScrollReveal";
+import useSmoothScroll from "../hooks/useSmoothScroll";
 import orientationImg from "../assets/events/orientation.png";
+import p1 from "../assets/gallery/p1.jpeg";
+import p2 from "../assets/gallery/p2.jpeg";
+import p3 from "../assets/gallery/p3.jpeg";
+import p4 from "../assets/gallery/p4.jpeg";
+import p5 from "../assets/gallery/p5.jpeg";
+import p6 from "../assets/gallery/p6.jpeg";
+import p7 from "../assets/gallery/p7.jpeg";
+import p8 from "../assets/gallery/p8.jpeg";
+import p9 from "../assets/gallery/p9.jpeg";
+import p10 from "../assets/gallery/p10.jpeg";
+import p11 from "../assets/gallery/p11.jpeg";
+import p12 from "../assets/gallery/p12.jpeg";
+import p13 from "../assets/gallery/p13.jpeg";
+import p14 from "../assets/gallery/p14.jpeg";
+import p15 from "../assets/gallery/p15.jpeg";
+import p16 from "../assets/gallery/p16.jpeg";
+import p17 from "../assets/gallery/p17.jpeg";
+import p18 from "../assets/gallery/p18.jpeg";
+import p19 from "../assets/gallery/p19.jpeg";
+import p20 from "../assets/gallery/p20.jpeg";
+import p21 from "../assets/gallery/p21.jpeg";
+import p22 from "../assets/gallery/p22.jpeg";
+import p23 from "../assets/gallery/p23.jpeg";
+import p24 from "../assets/gallery/p24.jpeg";
+import p25 from "../assets/gallery/p25.jpeg";
+import p26 from "../assets/gallery/p26.jpeg";
 
 // lucide-react 1.0 removed brand/logo icons (Github, Instagram, Linkedin, etc).
 // Lightweight stand-ins in the same stroke style, matching the lucide props API (size, className).
@@ -48,41 +75,55 @@ const featuredEvent = {
   description: 'Welcome to TechHub and discover every domain, meet seniors, explore projects, and begin your journey with the community.',
   image: orientationImg
 }
-const gallery = ['https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=85', 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=85', 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1200&q=85', 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=85', 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=85']
 const contactInfo = [['Location', MapPin, 'GIET University, Gunupur, Odisha', null], ['Email', Mail, 'techhub@giet.edu', 'mailto:techhub@giet.edu'], ['Phone', Phone, '+91 XXXXX XXXXX', null]]
 const socialLinks = [['Instagram', Instagram, 'https://www.instagram.com/techub_gietu?igsh=d3FkdWEyNjE0dzM='], ['LinkedIn', Linkedin, 'https://www.linkedin.com/company/tech-hub-gietclub/'], ['GitHub', Github, '#']]
 const CONTACT_EMAIL = 'techhub@giet.edu'
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const galleryItems = [
-  {
-    image: "/gallery/workshop1.jpg",
-    title: "Web Development Workshop",
-  },
-  {
-    image: "/gallery/hackathon.jpg",
-    title: "Hackathon",
-  },
-  {
-    image: "/gallery/orientation.jpg",
-    title: "Orientation",
-  },
-  {
-    image: "/gallery/team.jpg",
-    title: "Core Team",
-  },
-  {
-    image: "/gallery/winners.jpg",
-    title: "Competition Winners",
-  },
-  {
-    image: "/gallery/session.jpg",
-    title: "Coding Session",
-  },
+// All 26 local TechHub gallery photos, in import order. DriftWall assigns
+// items to its columns internally, so keeping this flat and in-order lets
+// its own column-fill logic (round-robin across `columns`) spread the mix
+// evenly — e.g. with columns=4 that lands p1/p5/p9... in column 1,
+// p2/p6/p10... in column 2, and so on.
+const galleryImages = [
+  p1, p2, p3, p4, p5,
+  p6, p7, p8, p9, p10,
+  p11, p12, p13, p14, p15,
+  p16, p17, p18, p19, p20,
+  p21, p22, p23, p24, p25,
+  p26,
 ];
 
+const galleryItems = galleryImages.map((image, i) => ({
+  image,
+  title: `TechHub Moment ${i + 1}`,
+}));
+
 function Button({ children, outline = false, href = '#contact' }) { return <a href={href} className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold transition-all ${outline ? 'border border-slate-700 bg-slate-950/30 text-slate-200 hover:border-blue-400/70 hover:bg-slate-900' : 'bg-blue-500 text-white shadow-[0_12px_30px_-12px_rgba(59,130,246,.9)] hover:bg-blue-400'}`}>{children}</a> }
-function SectionTitle({ eyebrow, title, text }) { return <div className="mx-auto mb-12 max-w-2xl text-center"><div className="eyebrow mb-4">{eyebrow}</div><h2 className="text-3xl font-semibold text-balance text-white sm:text-5xl">{title}</h2>{text && <p className="muted mt-5 text-base leading-7">{text}</p>}</div> }
+function SectionTitle({ eyebrow, title, text }) { return <div className="mx-auto mb-12 max-w-2xl text-center"><div className="eyebrow mb-4">{eyebrow}</div><h2 className="section-title-glow relative text-3xl font-semibold text-balance text-white sm:text-5xl"><span className="section-title-shimmer">{title}</span></h2>{text && <p className="muted mt-5 text-base leading-7">{text}</p>}</div> }
 function Reveal({ children, className = '' }) { return <div className={`animate-[rise_.7s_cubic-bezier(.16,1,.3,1)_both] ${className}`}>{children}</div> }
+
+// Faint cursor-following glow, desktop only. Purely visual, sits behind
+// content (no z-index above sections), pointer-events disabled throughout.
+function CursorGlow() {
+  const ref = useRef(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    let raf = null
+    function handleMove(e) {
+      if (raf) return
+      raf = requestAnimationFrame(() => {
+        el.style.setProperty('--cursor-x', `${e.clientX}px`)
+        el.style.setProperty('--cursor-y', `${e.clientY}px`)
+        raf = null
+      })
+    }
+    window.addEventListener('pointermove', handleMove, { passive: true })
+    return () => window.removeEventListener('pointermove', handleMove)
+  }, [])
+  return <div ref={ref} className="cursor-glow hidden lg:block" aria-hidden="true" />
+}
 
 function ContactForm() {
   const [values, setValues] = useState({ name: '', email: '', subject: '', message: '' })
@@ -159,6 +200,7 @@ function ContactForm() {
 }
 
 export default function RefinedHome() {
+  useSmoothScroll()
   const [open, setOpen] = useState(false)
   const aboutSpotlightRef = useRef(null)
   function handleAboutMouseMove(e) {
@@ -171,6 +213,7 @@ export default function RefinedHome() {
     el.style.setProperty('--spot-y', `${y}%`)
   }
   return <div className="min-h-screen bg-[#030712] text-slate-100">
+    <CursorGlow />
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[.08] bg-[#030712]/80 backdrop-blur-xl animate-[navFade_.6s_cubic-bezier(.16,1,.3,1)_both] [animation-delay:.2s]">
       <div className="container flex h-[4.5rem] items-center justify-between">
         <a href="#top" className="flex items-center gap-3" aria-label="TechHub home"><span className="grid size-9 place-items-center rounded-xl bg-blue-500/15 text-blue-300 ring-1 ring-inset ring-blue-400/30"><Code2 size={19} /></span><span className="font-heading text-lg font-semibold tracking-tight">TECH<span className="text-blue-400">'HUB</span></span></a>
@@ -249,7 +292,7 @@ export default function RefinedHome() {
             maskImage: 'radial-gradient(ellipse 70% 70% at 50% 45%, #000 40%, transparent 88%)',
           }}
         >
-          <DotField dotRadius={1.2} dotSpacing={16} bulgeStrength={35} glowRadius={140} sparkle={false} waveAmplitude={6} />
+          <DotField dotRadius={1.6} dotSpacing={16} bulgeStrength={45} glowRadius={175} sparkle={false} waveAmplitude={6} />
         </div>
 
         {/* 4. Mouse-follow spotlight — extremely subtle, never affects text contrast */}
@@ -297,7 +340,7 @@ export default function RefinedHome() {
 
             <ScrollReveal delay={0} className="relative z-10 col-span-2">
               <SpotlightCard
-                className="surface group h-full rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-2 hover:border-blue-400/30 sm:p-7"
+                className="surface about-card group h-full rounded-2xl p-5 sm:p-7"
                 spotlightColor="rgba(99,102,241,0.15)"
               >
                 <span className="mb-8 grid size-11 place-items-center rounded-xl bg-blue-500/10 text-blue-400 transition-transform duration-300 group-hover:scale-[1.08]"><Rocket size={22} /></span>
@@ -310,10 +353,22 @@ export default function RefinedHome() {
               </SpotlightCard>
             </ScrollReveal>
             <ScrollReveal delay={150} className="relative z-10">
-              <div className="surface group h-full rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-2 hover:border-blue-400/30 sm:p-7"><span className="mb-8 grid size-11 place-items-center rounded-xl bg-violet-500/10 text-violet-400 transition-transform duration-300 group-hover:scale-[1.08]"><Users size={22} /></span><div className="font-heading text-lg font-semibold text-white">Find your people</div></div>
+              <SpotlightCard
+                className="surface about-card group h-full rounded-2xl p-5 sm:p-7"
+                spotlightColor="rgba(99,102,241,0.15)"
+              >
+                <span className="mb-8 grid size-11 place-items-center rounded-xl bg-violet-500/10 text-violet-400 transition-transform duration-300 group-hover:scale-[1.08]"><Users size={22} /></span>
+                <div className="font-heading text-lg font-semibold text-white">Find your people</div>
+              </SpotlightCard>
             </ScrollReveal>
             <ScrollReveal delay={300} className="relative z-10">
-              <div className="surface group h-full rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-2 hover:border-blue-400/30 sm:p-7"><span className="mb-8 grid size-11 place-items-center rounded-xl bg-emerald-500/10 text-emerald-400 transition-transform duration-300 group-hover:scale-[1.08]"><Trophy size={22} /></span><div className="font-heading text-lg font-semibold text-white">Ship together</div></div>
+              <SpotlightCard
+                className="surface about-card group h-full rounded-2xl p-5 sm:p-7"
+                spotlightColor="rgba(99,102,241,0.15)"
+              >
+                <span className="mb-8 grid size-11 place-items-center rounded-xl bg-emerald-500/10 text-emerald-400 transition-transform duration-300 group-hover:scale-[1.08]"><Trophy size={22} /></span>
+                <div className="font-heading text-lg font-semibold text-white">Ship together</div>
+              </SpotlightCard>
             </ScrollReveal>
           </div></div></section>
 
@@ -339,7 +394,7 @@ export default function RefinedHome() {
             waveAmplitude={0}
           />
         </div>
-        <div className="container relative z-10"><SectionTitle eyebrow="Explore your edge" title="A domain for every kind of builder" text="Start with what excites you. Build the skills and confidence to go further." /><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{domains.map(([number, title, text, Icon], i) => <ScrollReveal key={title} delay={i * 80}><div className="surface group h-full rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-1 hover:border-blue-400/30 sm:p-6"><div className="flex items-start justify-between"><Icon size={23} className="text-blue-400" /><span className="font-mono text-xs text-slate-600">{number}</span></div><h3 className="mt-12 font-heading text-lg font-semibold text-white">{title}</h3><p className="muted mt-2 text-sm leading-6">{text}</p><ArrowRight size={16} className="mt-5 text-slate-600 transition-transform group-hover:translate-x-1 group-hover:text-blue-300" /></div></ScrollReveal>)}</div></div></section>
+        <div className="container relative z-10"><SectionTitle eyebrow="Explore your edge" title="A domain for every kind of builder" text="Start with what excites you. Build the skills and confidence to go further." /><div className="bento-grid grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{domains.map(([number, title, text, Icon], i) => <ScrollReveal key={title} delay={i * 80}><div className="surface bento-card domain-card group h-full rounded-2xl p-5 transition-transform duration-300 sm:p-6"><div className="flex items-start justify-between"><Icon size={23} className="domain-icon text-blue-400" /><span className="font-mono text-xs text-slate-600">{number}</span></div><h3 className="mt-12 font-heading text-lg font-semibold text-white">{title}</h3><p className="muted mt-2 text-sm leading-6">{text}</p><ArrowRight size={16} className="mt-5 text-slate-600 transition-transform group-hover:translate-x-1 group-hover:text-blue-300" /></div></ScrollReveal>)}</div></div></section>
 
       <section className="section relative overflow-hidden section-fade-top lighting-whyjoin">
         <div
@@ -360,17 +415,17 @@ export default function RefinedHome() {
           />
         </div>
         <div className="ambient-blobs z-[1]" style={{ opacity: 0.5 }}><span className="blob blob-violet blob-1" /><span className="blob blob-emerald blob-3" /></div>
-        <div className="container relative z-10"><SectionTitle eyebrow="Why join" title="More than a club. A launchpad." text="The fastest way to grow is to build alongside people who make you want to raise your bar." /><div className="grid gap-4 md:grid-cols-3">
+        <div className="container relative z-10"><SectionTitle eyebrow="Why join" title="More than a club. A launchpad." text="The fastest way to grow is to build alongside people who make you want to raise your bar." /><div className="bento-grid grid gap-4 md:grid-cols-3">
           <ScrollReveal delay={0} className="md:col-span-2">
             <SpotlightCard
-              className="surface surface-elevated group h-full rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1"
+              className="surface surface-elevated bento-card group h-full rounded-2xl p-6 transition-transform duration-300"
               spotlightColor="rgba(59,130,246,0.12)"
               style={{ backgroundColor: 'rgba(15, 23, 42, 0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
             ><span className="grid size-12 place-items-center rounded-xl bg-blue-500/10 text-blue-400"><Sparkles size={22} /></span><h3 className="mt-12 font-heading text-2xl font-semibold">Learn by doing</h3><p className="muted mt-3 max-w-xl leading-7">Forget passive tutorials. Pair with peers, get feedback from mentors, and turn every idea into a small, shippable experiment.</p></SpotlightCard>
           </ScrollReveal>
           <ScrollReveal delay={80}>
             <SpotlightCard
-              className="surface group h-full rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1"
+              className="surface bento-card group h-full rounded-2xl p-6 transition-transform duration-300"
               spotlightColor="rgba(99,102,241,0.12)"
               style={{ backgroundColor: 'rgba(15, 23, 42, 0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
             >
@@ -387,33 +442,33 @@ export default function RefinedHome() {
           </ScrollReveal>
           <ScrollReveal delay={160}>
             <SpotlightCard
-              className="surface group h-full rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1"
+              className="surface bento-card group h-full rounded-2xl p-6 transition-transform duration-300"
               spotlightColor="rgba(99,102,241,0.12)"
               style={{ backgroundColor: 'rgba(15, 23, 42, 0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
             ><span className="grid size-12 place-items-center rounded-xl bg-emerald-500/10 text-emerald-400"><Globe2 size={22} /></span><h3 className="mt-12 font-heading text-xl font-semibold">A wider world</h3><p className="muted mt-3 text-sm leading-6">Connect with teams, communities, and opportunities beyond campus.</p></SpotlightCard>
           </ScrollReveal>
           <ScrollReveal delay={240} className="md:col-span-2">
             <SpotlightCard
-              className="surface surface-elevated group h-full rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1"
+              className="surface surface-elevated bento-card group h-full rounded-2xl p-6 transition-transform duration-300"
               spotlightColor="rgba(16,185,129,0.12)"
               style={{ backgroundColor: 'rgba(15, 23, 42, 0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
             ><span className="grid size-12 place-items-center rounded-xl bg-blue-500/10 text-blue-400"><Code2 size={22} /></span><h3 className="mt-12 font-heading text-xl font-semibold">A portfolio with proof</h3><p className="muted mt-3 max-w-xl text-sm leading-6">Leave with work you can show, talk about, and be proud of.</p></SpotlightCard>
           </ScrollReveal>
         </div></div></section>
 
-      <section className="section border-y border-white/[.07] bg-slate-950/30 lighting-journey"><div className="container"><SectionTitle eyebrow="Your journey" title="Start small. Grow boldly." /><div className="grid gap-4 md:grid-cols-4">{[['01', 'Discover', 'Find a domain and meet your people.'], ['02', 'Build', 'Turn a problem into a working prototype.'], ['03', 'Compete', 'Put your skills to the test with a team.'], ['04', 'Lead', 'Share what you know and shape what comes next.']].map(([n, t, d], i) => <ScrollReveal key={n} delay={i * 80}><div className="surface group relative h-full rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-1 hover:border-blue-400/30 sm:p-6"><span className="grid size-10 place-items-center rounded-lg bg-blue-500/10 font-mono text-xs text-blue-400">{n}</span><h3 className="mt-6 font-heading text-lg font-semibold">{t}</h3><p className="muted mt-2 text-sm leading-6">{d}</p></div></ScrollReveal>)}</div></div></section>
+      <section className="section relative overflow-hidden border-y border-white/[.07] bg-slate-950/30 lighting-journey"><div className="ambient-blobs"><span className="blob blob-blue blob-1" /><span className="blob blob-violet blob-3" /></div><div className="container relative z-10"><SectionTitle eyebrow="Your journey" title="Start small. Grow boldly." /><div className="bento-grid grid gap-4 md:grid-cols-4">{[['01', 'Discover', 'Find a domain and meet your people.'], ['02', 'Build', 'Turn a problem into a working prototype.'], ['03', 'Compete', 'Put your skills to the test with a team.'], ['04', 'Lead', 'Share what you know and shape what comes next.']].map(([n, t, d], i) => <ScrollReveal key={n} delay={i * 80}><div className="surface bento-card group relative h-full rounded-2xl p-5 transition-transform duration-300 sm:p-6"><span className="grid size-10 place-items-center rounded-lg bg-blue-500/10 font-mono text-xs text-blue-400">{n}</span><h3 className="mt-6 font-heading text-lg font-semibold">{t}</h3><p className="muted mt-2 text-sm leading-6">{d}</p></div></ScrollReveal>)}</div></div></section>
 
-      <section className="section relative overflow-hidden bg-slate-950/25 section-fade-top lighting-achievements"><div className="ambient-blobs"><span className="blob blob-blue blob-2" /><span className="blob blob-violet blob-3" /></div><div className="container relative z-10"><SectionTitle eyebrow="Achievements" title="Small teams. Big momentum." /><div className="grid gap-4 sm:grid-cols-2">{[['40+', 'Products shipped', 'From campus ideas to public launches', Rocket, 'surface surface-elevated group h-full rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1 hover:border-blue-400/30', 'grid size-11 place-items-center rounded-xl bg-blue-500/10 text-blue-400'], ['12', 'Active chapters', 'A growing network of builders', Globe2, 'surface surface-elevated group h-full rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1 hover:border-violet-400/30', 'grid size-11 place-items-center rounded-xl bg-violet-500/10 text-violet-400']].map(([n, t, d, Icon, cardClass, chipClass], i) => <ScrollReveal key={t} delay={i * 80}><div className={cardClass}><span className={chipClass}><Icon size={20} /></span><div className="mt-6 font-heading text-4xl font-semibold text-blue-300">{n}</div><div className="mt-2 font-heading text-lg font-semibold">{t}</div><p className="muted mt-2 text-sm leading-6">{d}</p></div></ScrollReveal>)}</div></div></section>
+      <section className="section relative overflow-hidden bg-slate-950/25 section-fade-top lighting-achievements"><div className="ambient-blobs"><span className="blob blob-blue blob-2" /><span className="blob blob-violet blob-3" /></div><div className="container relative z-10"><SectionTitle eyebrow="Achievements" title="Small teams. Big momentum." /><div className="bento-grid grid gap-4 sm:grid-cols-2">{[['40+', 'Products shipped', 'From campus ideas to public launches', Rocket, 'surface surface-elevated bento-card group h-full rounded-2xl p-6 transition-transform duration-300', 'grid size-11 place-items-center rounded-xl bg-blue-500/10 text-blue-400'], ['12', 'Active chapters', 'A growing network of builders', Globe2, 'surface surface-elevated bento-card group h-full rounded-2xl p-6 transition-transform duration-300', 'grid size-11 place-items-center rounded-xl bg-violet-500/10 text-violet-400']].map(([n, t, d, Icon, cardClass, chipClass], i) => <ScrollReveal key={t} delay={i * 80}><div className={cardClass}><span className={chipClass}><Icon size={20} /></span><div className="mt-6 font-heading text-4xl font-semibold text-blue-300">{n}</div><div className="mt-2 font-heading text-lg font-semibold">{t}</div><p className="muted mt-2 text-sm leading-6">{d}</p></div></ScrollReveal>)}</div></div></section>
 
       <section id="events" className="section"><div className="container"><SectionTitle eyebrow="Upcoming event" title="Don't miss what's next." text="One event worth clearing your calendar for." /><div className="mx-auto max-w-[900px]"><ScrollReveal><SpotlightCard
-        className="surface group overflow-hidden rounded-2xl p-0 transition-transform duration-300 hover:-translate-y-1.5"
+        className="surface featured-event-glow group overflow-hidden rounded-2xl p-0 transition-transform duration-300 hover:-translate-y-1.5"
         spotlightColor="rgba(59,130,246,0.18)"
-      ><div className="relative aspect-[16/9] overflow-hidden"><img src={featuredEvent.image} alt={featuredEvent.title} loading="lazy" className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" /><div className="absolute inset-0 bg-gradient-to-t from-[#0b1020] via-transparent to-transparent" /><span className="absolute left-4 top-4 rounded-md border border-white/15 bg-slate-950/75 px-2.5 py-1 font-mono text-[10px] tracking-widest text-blue-200">UPCOMING</span></div><div className="p-6 sm:p-8"><h3 className="font-heading text-2xl font-semibold text-white sm:text-3xl">{featuredEvent.title}</h3><p className="muted mt-3 max-w-xl leading-7">{featuredEvent.description}</p><div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/[.08] pt-5 text-sm text-slate-300"><span className="flex items-center gap-2"><Calendar size={16} className="text-blue-400" />{featuredEvent.date}</span><span className="flex items-center gap-2"><Target size={16} className="text-blue-400" />{featuredEvent.audience}</span><span className="flex items-center gap-2"><Landmark size={16} className="text-blue-400" />{featuredEvent.location}</span></div><div className="mt-7 flex flex-wrap items-center gap-5"><a
+      ><div className="relative aspect-[16/9] overflow-hidden"><img src={featuredEvent.image} alt={featuredEvent.title} loading="lazy" className="event-image-float size-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" /><div className="absolute inset-0 bg-gradient-to-t from-[#0b1020] via-transparent to-transparent" /><span className="absolute left-4 top-4 rounded-md border border-white/15 bg-slate-950/75 px-2.5 py-1 font-mono text-[10px] tracking-widest text-blue-200">UPCOMING</span><span className="absolute right-4 top-4 flex items-center gap-1.5 rounded-md border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-1 font-mono text-[10px] tracking-widest text-emerald-300"><span className="live-pulse-dot" />LIVE REGISTRATION</span></div><div className="p-6 sm:p-8"><h3 className="font-heading text-2xl font-semibold text-white sm:text-3xl">{featuredEvent.title}</h3><p className="muted mt-3 max-w-xl leading-7">{featuredEvent.description}</p><div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/[.08] pt-5 text-sm text-slate-300"><span className="flex items-center gap-2"><Calendar size={16} className="text-blue-400" />{featuredEvent.date}</span><span className="flex items-center gap-2"><Target size={16} className="text-blue-400" />{featuredEvent.audience}</span><span className="flex items-center gap-2"><Landmark size={16} className="text-blue-400" />{featuredEvent.location}</span></div><div className="mt-7 flex flex-wrap items-center gap-5"><Magnet padding={40} magnetStrength={10}><a
         href={REGISTRATION_LINK}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-500 px-5 text-sm font-semibold text-white shadow-[0_12px_30px_-12px_rgba(59,130,246,.9)] transition-all duration-300 hover:scale-[1.03] hover:bg-blue-400 hover:shadow-[0_16px_36px_-10px_rgba(59,130,246,1)]"
-      >Register Now <ArrowRight size={16} /></a><a href="#events" className="text-sm font-semibold text-blue-300 hover:text-blue-200">View All Events</a></div></div></SpotlightCard></ScrollReveal></div></div></section>
+        className="btn-shine relative overflow-hidden inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-500 px-5 text-sm font-semibold text-white shadow-[0_12px_30px_-12px_rgba(59,130,246,.9)] transition-all duration-300 hover:scale-[1.03] hover:bg-blue-400 hover:shadow-[0_16px_36px_-10px_rgba(59,130,246,1)]"
+      >Register Now <ArrowRight size={16} /></a></Magnet><a href="#events" className="text-sm font-semibold text-blue-300 hover:text-blue-200">View All Events</a></div></div></SpotlightCard></ScrollReveal></div></div></section>
 
       <section
         id="gallery"
@@ -441,8 +496,8 @@ export default function RefinedHome() {
               turn={-6}
               lift={35}
               parallax={0.25}
-              fade={0.85}
-              dim={0.65}
+              fade={0.4}
+              dim={0.85}
 
             />
 
@@ -451,7 +506,7 @@ export default function RefinedHome() {
         </div>
       </section>
 
-      <section className="section"><div className="container"><SectionTitle eyebrow="Member stories" title="The people make the place" /><div className="grid gap-4 md:grid-cols-2"><figure className="surface group rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1 hover:border-blue-400/30 sm:p-8"><Quote className="text-blue-400" size={25} /><blockquote className="mt-6 text-lg leading-8 text-slate-200">TechHub gave me the confidence to stop waiting until I was ready. I shipped my first real product with people who became my closest friends.</blockquote><figcaption className="mt-8 flex items-center gap-3 border-t border-white/[.08] pt-5"><div className="grid size-9 place-items-center rounded-full bg-blue-500/20 text-sm font-semibold text-blue-200">AS</div><div><div className="text-sm font-semibold">Aditya Kumar Parida</div><div className="text-xs text-slate-500">Frontend team · 3rd year</div></div></figcaption></figure><figure className="surface group rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1 hover:border-violet-400/30 sm:p-8"><Quote className="text-violet-400" size={25} /><blockquote className="mt-6 text-lg leading-8 text-slate-200">The best part is the culture of sharing. Every workshop feels like someone opening a door and saying, come build with us.</blockquote><figcaption className="mt-8 flex items-center gap-3 border-t border-white/[.08] pt-5"><div className="grid size-9 place-items-center rounded-full bg-violet-500/20 text-sm font-semibold text-violet-200">NP</div><div><div className="text-sm font-semibold">M Deepti</div><div className="text-xs text-slate-500">AI team · 3rd year</div></div></figcaption></figure></div></div></section>
+      <section className="section"><div className="container"><SectionTitle eyebrow="Member stories" title="The people make the place" /><div className="bento-grid grid gap-4 md:grid-cols-2"><figure className="surface bento-card testimonial-card group rounded-2xl p-6 transition-transform duration-300 hover:border-blue-400/30 sm:p-8"><Quote className="text-blue-400" size={25} /><blockquote className="mt-6 text-lg leading-8 text-slate-200">TechHub gave me the confidence to stop waiting until I was ready. I shipped my first real product with people who became my closest friends.</blockquote><figcaption className="mt-8 flex items-center gap-3 border-t border-white/[.08] pt-5"><div className="grid size-9 place-items-center rounded-full bg-blue-500/20 text-sm font-semibold text-blue-200">AS</div><div><div className="text-sm font-semibold">Aditya Kumar Parida</div><div className="text-xs text-slate-500">Frontend team · 3rd year</div></div></figcaption></figure><figure className="surface bento-card testimonial-card group rounded-2xl p-6 transition-transform duration-300 hover:border-violet-400/30 sm:p-8"><Quote className="text-violet-400" size={25} /><blockquote className="mt-6 text-lg leading-8 text-slate-200">The best part is the culture of sharing. Every workshop feels like someone opening a door and saying, come build with us.</blockquote><figcaption className="mt-8 flex items-center gap-3 border-t border-white/[.08] pt-5"><div className="grid size-9 place-items-center rounded-full bg-violet-500/20 text-sm font-semibold text-violet-200">NP</div><div><div className="text-sm font-semibold">M Deepti</div><div className="text-xs text-slate-500">AI team · 3rd year</div></div></figcaption></figure></div></div></section>
 
       <section id="contact" className="section border-t border-white/[.07]"><div className="container"><SectionTitle eyebrow="Contact us" title="Let&apos;s Build Something Amazing Together" text="Have questions about TechHub? Interested in joining, collaborating, sponsoring an event, or simply want to know more? We&apos;d love to hear from you." /><div className="grid gap-5 lg:grid-cols-2 lg:gap-8"><div className="space-y-5"><Reveal className="space-y-4">{contactInfo.map(([label, Icon, value, href]) => <div key={label} className="surface group flex items-start gap-4 rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-1 hover:border-blue-400/30 sm:p-6"><span className="grid size-11 shrink-0 place-items-center rounded-xl bg-blue-500/15 text-blue-300 ring-1 ring-inset ring-blue-400/30"><Icon size={19} /></span><div className="min-w-0"><div className="font-heading text-sm font-semibold text-white">{label}</div>{href ? <a href={href} className="muted mt-1 block truncate text-sm hover:text-blue-300">{value}</a> : <p className="muted mt-1 text-sm leading-6">{value}</p>}</div></div>)}<div className="surface rounded-2xl p-5 sm:p-6"><div className="font-heading text-sm font-semibold text-white">Follow us</div><div className="mt-4 flex items-center gap-3">{socialLinks.map(([label, Icon, href]) => <a key={label} href={href} aria-label={label} className="grid size-11 place-items-center rounded-xl bg-blue-500/10 text-blue-300 transition-colors hover:bg-blue-500/20 hover:text-blue-200"><Icon size={18} /></a>)}</div></div></Reveal></div><Reveal><ContactForm /></Reveal></div></div></section>
     </main>
