@@ -34,33 +34,35 @@ TECHHUB WEB
 │   ├── assets
 │   │   ├── events
 │   │   │   └── orientation.png
-│   │   └── gallery
-│   │       ├── p1.jpeg
-│   │       ├── p10.jpeg
-│   │       ├── p11.jpeg
-│   │       ├── p12.jpeg
-│   │       ├── p13.jpeg
-│   │       ├── p14.jpeg
-│   │       ├── p15.jpeg
-│   │       ├── p16.jpeg
-│   │       ├── p17.jpeg
-│   │       ├── p18.jpeg
-│   │       ├── p19.jpeg
-│   │       ├── p2.jpeg
-│   │       ├── p20.jpeg
-│   │       ├── p21.jpeg
-│   │       ├── p22.jpeg
-│   │       ├── p23.jpeg
-│   │       ├── p24.jpeg
-│   │       ├── p25.jpeg
-│   │       ├── p26.jpeg
-│   │       ├── p3.jpeg
-│   │       ├── p4.jpeg
-│   │       ├── p5.jpeg
-│   │       ├── p6.jpeg
-│   │       ├── p7.jpeg
-│   │       ├── p8.jpeg
-│   │       └── p9.jpeg
+│   │   ├── gallery
+│   │   │   ├── p1.jpeg
+│   │   │   ├── p10.jpeg
+│   │   │   ├── p11.jpeg
+│   │   │   ├── p12.jpeg
+│   │   │   ├── p13.jpeg
+│   │   │   ├── p14.jpeg
+│   │   │   ├── p15.jpeg
+│   │   │   ├── p16.jpeg
+│   │   │   ├── p17.jpeg
+│   │   │   ├── p18.jpeg
+│   │   │   ├── p19.jpeg
+│   │   │   ├── p2.jpeg
+│   │   │   ├── p20.jpeg
+│   │   │   ├── p21.jpeg
+│   │   │   ├── p22.jpeg
+│   │   │   ├── p23.jpeg
+│   │   │   ├── p24.jpeg
+│   │   │   ├── p25.jpeg
+│   │   │   ├── p26.jpeg
+│   │   │   ├── p3.jpeg
+│   │   │   ├── p4.jpeg
+│   │   │   ├── p5.jpeg
+│   │   │   ├── p6.jpeg
+│   │   │   ├── p7.jpeg
+│   │   │   ├── p8.jpeg
+│   │   │   └── p9.jpeg
+│   │   ├── tech-hub.png
+│   │   └── techhub-logo.png
 │   ├── components
 │   │   ├── common
 │   │   │   ├── SectionTitle.jsx
@@ -75,7 +77,9 @@ TECHHUB WEB
 │   │   │   ├── WarpText.css
 │   │   │   └── WarpText.jsx
 │   │   ├── RefinedHome.jsx
-│   │   └── ScrollReveal.jsx
+│   │   ├── ScrollReveal.jsx
+│   │   ├── WhatsAppFloat.css
+│   │   └── WhatsAppFloat.jsx
 │   ├── hooks
 │   │   ├── useInView.js
 │   │   └── useSmoothScroll.js
