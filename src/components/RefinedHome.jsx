@@ -68,7 +68,7 @@ const stats = [
 ]
 
 const domains = [['01', 'Web & App Development', 'From first commit to production-ready products.', Code2], ['02', 'AI & Machine Learning', 'Explore intelligent systems with practical experiments.', BrainCircuit], ['03', 'Cybersecurity', 'Learn to build resilient systems and think defensively.', ShieldCheck], ['04', 'Data Science', 'Extract patterns, build dashboards, and make data-driven decisions.', Globe2]]
-const REGISTRATION_LINK = "https://YOUR_GOOGLE_FORM_LINK"
+const REGISTRATION_LINK = "https://docs.google.com/forms/d/1LvSepXGPgNEVKmITQlpbEOX0YLIQty0ar_Zv7MNhjTg/edit"
 const featuredEvent = {
   title: 'TechHub Orientation 2026',
   date: '13 August 2026',
