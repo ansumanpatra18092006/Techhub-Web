@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { AlertCircle, ArrowRight, BrainCircuit, Calendar, CheckCircle2, ChevronDown, Code2, GitBranch, Globe2, Landmark, Mail, MapPin, Menu, Phone, Rocket, Send, ShieldCheck, Sparkles, Target, Trophy, Users, X, Zap } from 'lucide-react'
+import { AlertCircle, ArrowRight, BrainCircuit, Calendar, CheckCircle2, ChevronDown, Code2, Globe2, Landmark, Mail, MapPin, Menu, Phone, Rocket, Send, ShieldCheck, Sparkles, Target, Trophy, Users, X, Zap } from 'lucide-react'
 import Aurora from "./reactbits/Aurora";
 import Magnet from "../../components/Magnet";
 import CountUp from "../../components/CountUp";
@@ -38,13 +38,8 @@ import p25 from "../assets/gallery/p25.jpeg";
 import p26 from "../assets/gallery/p26.jpeg";
 import techhubLogo from "../assets/techhub-logo.png";
 
-// lucide-react 1.0 removed brand/logo icons (Github, Instagram, Linkedin, etc).
+// lucide-react 1.0 removed brand/logo icons (Instagram, Linkedin, etc).
 // Lightweight stand-ins in the same stroke style, matching the lucide props API (size, className).
-const Github = ({ size = 24, className = '', ...props }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
-    <path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" />
-  </svg>
-)
 const Instagram = ({ size = 24, className = '', ...props }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
     <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -78,7 +73,7 @@ const featuredEvent = {
   image: orientationImg
 }
 const contactInfo = [['Location', MapPin, 'GIET University, Gunupur, Odisha', null], ['Email', Mail, '24cse181.ansumanpatra@giet.edu', 'mailto:24cse181.ansumanpatra@giet.edu'], ['Phone', Phone, '+91 6371690323', null]]
-const socialLinks = [['Instagram', Instagram, 'https://www.instagram.com/techub_gietu?igsh=d3FkdWEyNjE0dzM='], ['LinkedIn', Linkedin, 'https://www.linkedin.com/company/tech-hub-gietclub/'], ['GitHub', Github, '#']]
+const socialLinks = [['Instagram', Instagram, 'https://www.instagram.com/techub_gietu?igsh=d3FkdWEyNjE0dzM='], ['LinkedIn', Linkedin, 'https://www.linkedin.com/company/tech-hub-gietclub/']]
 const CONTACT_EMAIL = '24cse181.ansumanpatra@giet.edu'
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 // All 26 local TechHub gallery photos, in import order. DriftWall assigns
@@ -525,6 +520,6 @@ export default function RefinedHome() {
 
       <section id="contact" className="section border-t border-white/[.07]"><div className="container"><SectionTitle eyebrow="Contact us" title="Let&apos;s Build Something Amazing Together" text="Have questions about TechHub? Interested in joining, collaborating, sponsoring an event, or simply want to know more? We&apos;d love to hear from you." /><div className="grid gap-5 lg:grid-cols-2 lg:gap-8"><div className="space-y-5"><Reveal className="space-y-4">{contactInfo.map(([label, Icon, value, href]) => <div key={label} className="surface group flex items-start gap-4 rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-1 hover:border-blue-400/30 sm:p-6"><span className="grid size-11 shrink-0 place-items-center rounded-xl bg-blue-500/15 text-blue-300 ring-1 ring-inset ring-blue-400/30"><Icon size={19} /></span><div className="min-w-0"><div className="font-heading text-sm font-semibold text-white">{label}</div>{href ? <a href={href} className="muted mt-1 block truncate text-sm hover:text-blue-300">{value}</a> : <p className="muted mt-1 text-sm leading-6">{value}</p>}</div></div>)}<div className="surface rounded-2xl p-5 sm:p-6"><div className="font-heading text-sm font-semibold text-white">Follow us</div><div className="mt-4 flex items-center gap-3">{socialLinks.map(([label, Icon, href]) => <a key={label} href={href} aria-label={label} className="grid size-11 place-items-center rounded-xl bg-blue-500/10 text-blue-300 transition-colors hover:bg-blue-500/20 hover:text-blue-200"><Icon size={18} /></a>)}</div></div></Reveal></div><Reveal><ContactForm /></Reveal></div></div></section>
     </main>
-    <footer className="border-t border-white/[.08] py-10 lighting-footer"><div className="container flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between"><div><a href="#top" className="font-heading text-lg font-semibold">TECH<span className="text-blue-400">'HUB</span></a><p className="muted mt-2 text-sm">Build beyond the classroom.</p></div><div className="flex items-center gap-3 text-slate-500"><a href="#contact" aria-label="GitHub" className="grid size-9 place-items-center rounded-lg transition-colors duration-300 hover:bg-white/[.06] hover:text-white"><GitBranch size={18} /></a><a href="#contact" aria-label="Community" className="grid size-9 place-items-center rounded-lg transition-colors duration-300 hover:bg-white/[.06] hover:text-white"><Users size={18} /></a><span className="ml-2 text-xs">© 2024 TechHub</span></div></div></footer>
+    <footer className="border-t border-white/[.08] py-10 lighting-footer"><div className="container flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between"><div><a href="#top" className="font-heading text-lg font-semibold">TECH<span className="text-blue-400">'HUB</span></a><p className="muted mt-2 text-sm">Build beyond the classroom.</p></div><div className="flex items-center gap-3 text-slate-500"><a href="#contact" aria-label="Community" className="grid size-9 place-items-center rounded-lg transition-colors duration-300 hover:bg-white/[.06] hover:text-white"><Users size={18} /></a><span className="ml-2 text-xs">© 2024 TechHub</span></div></div></footer>
   </div>
 }
