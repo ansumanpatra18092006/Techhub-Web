@@ -38,7 +38,7 @@ const DEFAULT_STORIES = [
     },
     {
         quote: 'Building websites for club projects gave me practical experience that tutorials alone never could. Seeing people use something I built felt incredible.',
-        name: 'Biswajeet Sahu',
+        name: 'Biswajeet Senapati',
         role: 'Web Development Team · 3rd Year',
         initials: 'BS',
         theme: 'emerald'
