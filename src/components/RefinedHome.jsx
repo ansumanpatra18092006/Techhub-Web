@@ -237,13 +237,13 @@ export default function RefinedHome() {
           magnetStrength={10}
         >
           <Button href="#contact">
-            Join the club
+            Join TechHub
             <ArrowRight size={16} />
           </Button>
         </Magnet></div>
         <button className="rounded-lg p-2 text-slate-300 md:hidden" onClick={() => setOpen(!open)} aria-label={open ? 'Close menu' : 'Open menu'}>{open ? <X /> : <Menu />}</button>
       </div>
-      {open && <nav className="container border-t border-white/[.08] py-4 md:hidden">{nav.map(([label, href]) => <a onClick={() => setOpen(false)} key={label} href={href} className="block rounded-lg px-3 py-3 text-sm text-slate-300 hover:bg-white/[.04]">{label}</a>)}<a onClick={() => setOpen(false)} href="#contact" className="mt-2 block"><Button>Join the club <ArrowRight size={16} /></Button></a></nav>}
+      {open && <nav className="container border-t border-white/[.08] py-4 md:hidden">{nav.map(([label, href]) => <a onClick={() => setOpen(false)} key={label} href={href} className="block rounded-lg px-3 py-3 text-sm text-slate-300 hover:bg-white/[.04]">{label}</a>)}<a onClick={() => setOpen(false)} href="#contact" className="mt-2 block"><Button href="#contact">Query <ArrowRight size={16} /></Button></a></nav>}
     </header>
 
     <main id="top">
@@ -261,8 +261,8 @@ export default function RefinedHome() {
           padding={60}
           magnetStrength={8}
         >
-          <Button href="#contact">
-            Join TechHub
+          <Button href="#events">
+            Explore Orientation
             <ArrowRight size={17} />
           </Button>
         </Magnet></Reveal>
