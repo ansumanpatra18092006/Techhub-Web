@@ -25,7 +25,7 @@ const DEFAULT_STORIES = [
     {
         quote: 'My first TechHub project failed completely. That experience taught me more about development, teamwork, and debugging than any classroom assignment ever could.',
         name: 'Aditya Kumar Parida',
-        role: 'Frontend Team · 3rd Year',
+        role: 'Management Team · 3rd Year',
         initials: 'AKP',
         theme: 'blue'
     },
@@ -53,14 +53,14 @@ const DEFAULT_STORIES = [
     {
         quote: 'The backend team taught me how systems actually work behind the interface. APIs, databases, and architecture finally started making sense.',
         name: 'Asish Kumar Dhal',
-        role: 'Backend Team · 3rd Year',
+        role: 'Technical Team · 3rd Year',
         initials: 'AKD',
         theme: 'blue'
     },
     {
         quote: 'Late-night hackathon sessions with the team pushed me further than any individual project. We learned, built, failed, and shipped together.',
         name: 'Dipesh Jha',
-        role: 'Fullstack Developer · 3rd Year',
+        role: 'Web Development Team · 3rd Year',
         initials: 'DJ',
         theme: 'violet'
     },
@@ -123,7 +123,7 @@ const DEFAULT_STORIES = [
     {
         quote: 'Developing applications for real users taught me to think beyond features and focus on reliability, usability, and impact.',
         name: 'Ashutosh Sahu',
-        role: 'App Development Team · 2nd Year',
+        role: 'Web Development Team · 3rd Year',
         initials: 'AS',
         theme: 'emerald'
     }

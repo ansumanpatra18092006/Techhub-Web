@@ -289,7 +289,15 @@ const DotField = memo(({
 
     doResize();
     window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    // Capture phase (not bubble) is deliberate: this listener must see every
+    // pointermove over the page, including moves over interactive cards that
+    // sit above the canvas (e.g. SpotlightCard's own mousemove-driven glow).
+    // Those cards' handlers run in the bubble phase, and some call
+    // stopPropagation() on the native event once they've used it, which would
+    // otherwise stop it from ever reaching a bubble-phase window listener.
+    // A capture-phase listener runs on the way down, before bubbling starts,
+    // so it can't be blocked by anything a descendant does afterward.
+    window.addEventListener('mousemove', onMouseMove, { passive: true, capture: true });
     rafRef.current = requestAnimationFrame(tick);
 
     const io = new IntersectionObserver(
@@ -316,7 +324,7 @@ const DotField = memo(({
       clearInterval(speedInterval);
       clearTimeout(resizeTimer);
       window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mousemove', onMouseMove, { capture: true });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

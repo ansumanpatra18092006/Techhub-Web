@@ -20,6 +20,7 @@ TECHHUB WEB
 ├── project_structure.txt
 ├── public
 │   ├── apple-icon.png
+│   ├── favicon.png
 │   ├── gallery
 │   ├── icon-dark-32x32.png
 │   ├── icon-light-32x32.png
@@ -32,6 +33,24 @@ TECHHUB WEB
 ├── src
 │   ├── App.jsx
 │   ├── assets
+│   │   ├── builders
+│   │   │   ├── adhiraj.png
+│   │   │   ├── aditya-parida.jpeg
+│   │   │   ├── aditya-vajpayee.png
+│   │   │   ├── ansuman.jpeg
+│   │   │   ├── arati.jpeg
+│   │   │   ├── ashutosh.jpeg
+│   │   │   ├── asish.png
+│   │   │   ├── biswajeet.png
+│   │   │   ├── debasish.jpeg
+│   │   │   ├── deepti.png
+│   │   │   ├── desktop.ini
+│   │   │   ├── disha.png
+│   │   │   ├── mayank.jpeg
+│   │   │   ├── pratikshya.png
+│   │   │   ├── sandeep.jpeg
+│   │   │   ├── smruti.png
+│   │   │   └── tapas.png
 │   │   ├── events
 │   │   │   └── orientation.png
 │   │   ├── gallery
@@ -80,6 +99,8 @@ TECHHUB WEB
 │   │   ├── ScrollReveal.jsx
 │   │   ├── SplashScreen.css
 │   │   ├── SplashScreen.jsx
+│   │   ├── TechHubRoadmaps.jsx
+│   │   ├── TechHubStory.jsx
 │   │   ├── WhatsAppFloat.css
 │   │   └── WhatsAppFloat.jsx
 │   ├── hooks

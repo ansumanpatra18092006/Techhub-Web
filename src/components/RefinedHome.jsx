@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
-import { AlertCircle, ArrowRight, BrainCircuit, Calendar, CheckCircle2, ChevronDown, Code2, Globe2, Landmark, Mail, MapPin, Menu, Phone, Rocket, Send, ShieldCheck, Sparkles, Target, Trophy, Users, X, Zap } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { AlertCircle, ArrowRight, BrainCircuit, Calendar, CheckCircle2, ChevronDown, Code2, Globe2, Landmark, Mail, Map, MapPin, Menu, Phone, Rocket, Send, ShieldCheck, Sparkles, Target, Trophy, Users, X, Zap } from 'lucide-react'
 import Aurora from "./reactbits/Aurora";
 import Magnet from "../../components/Magnet";
 import CountUp from "../../components/CountUp";
@@ -37,6 +38,21 @@ import p24 from "../assets/gallery/p24.jpeg";
 import p25 from "../assets/gallery/p25.jpeg";
 import p26 from "../assets/gallery/p26.jpeg";
 import techhubLogo from "../assets/techhub-logo.png";
+import ansuman from "../assets/builders/ansuman.jpeg";
+import arati from "../assets/builders/arati.jpeg";
+import adityaParida from "../assets/builders/aditya-parida.jpeg";
+import deepti from "../assets/builders/deepti.png";
+import biswajeet from "../assets/builders/biswajeet.png";
+import pratikshya from "../assets/builders/pratikshya.png";
+import asish from "../assets/builders/asish.png";
+import debasish from "../assets/builders/debasish.jpeg";
+import tapas from "../assets/builders/tapas.png";
+import smruti from "../assets/builders/smruti.png";
+import mayank from "../assets/builders/mayank.jpeg";
+import sandeep from "../assets/builders/sandeep.jpeg";
+import adhiraj from "../assets/builders/adhiraj.png";
+import adityaVajpayee from "../assets/builders/aditya-vajpayee.png";
+import ashutosh from "../assets/builders/ashutosh.jpeg";
 
 // lucide-react 1.0 removed brand/logo icons (Instagram, Linkedin, etc).
 // Lightweight stand-ins in the same stroke style, matching the lucide props API (size, className).
@@ -55,14 +71,93 @@ const Linkedin = ({ size = 24, className = '', ...props }) => (
   </svg>
 )
 
-const nav = [['About', '#about'], ['Domains', '#domains'], ['Events', '#events'], ['Gallery', '#gallery']]
+// `route: true` entries use React Router navigation (Link) to a dedicated
+// presentation page. Everything else is an in-page anchor that scrolls to a
+// section on the homepage.
+const nav = [
+  ['About', '#about'],
+  ['Story', '/story', true],
+  ['Roadmaps', '/roadmaps', true],
+  ['Domains', '#domains'],
+  ['Builders', '#builders'],
+  ['Events', '#events'],
+  ['Gallery', '#gallery'],
+]
 const stats = [
   [20, '+', 'active members', Users],
   [40, '+', 'projects shipped', Rocket],
   [100, '%', 'student-led', ShieldCheck]
 ]
 
-const domains = [['01', 'Web & App Development', 'From first commit to production-ready products.', Code2], ['02', 'AI & Machine Learning', 'Explore intelligent systems with practical experiments.', BrainCircuit], ['03', 'Cybersecurity', 'Learn to build resilient systems and think defensively.', ShieldCheck], ['04', 'Data Science', 'Extract patterns, build dashboards, and make data-driven decisions.', Globe2]]
+const domains = [['01', 'Web & App Development', 'From first commit to production-ready products.', Code2], ['02', 'AI & Machine Learning', 'Explore intelligent systems with practical experiments.', BrainCircuit], ['03', 'Cybersecurity', 'Learn to build resilient systems and think defensively.', ShieldCheck], ['04', 'UI/UX Design', 'Craft intuitive interfaces and experiences people love to use.', Sparkles]]
+
+// "Start Your Journey" — the two presentation entry points used live during
+// orientation. Each card is a full route (React Router), not a scroll link.
+const journeyCards = [
+  {
+    to: '/story',
+    icon: Rocket,
+    accent: 'blue',
+    title: 'Our Story',
+    description: "Discover why TechHub was created, how it started, the milestones we've achieved, and the vision we're building toward.",
+    cta: 'Explore Story',
+  },
+  {
+    to: '/roadmaps',
+    icon: Map,
+    accent: 'violet',
+    title: 'B.Tech Survival Guide',
+    description: 'A fun and practical roadmap covering domains, CGPA, internships, projects, placements, and mistakes to avoid during engineering.',
+    cta: 'Open Guide',
+  },
+]
+const journeyAccent = {
+  blue: { glow: 'from-blue-500/50 via-blue-400/20', chip: 'bg-blue-500/10 text-blue-400', cta: 'text-blue-300 group-hover:text-blue-200', spotlight: 'rgba(59,130,246,0.2)' },
+  violet: { glow: 'from-violet-500/50 via-violet-400/20', chip: 'bg-violet-500/10 text-violet-400', cta: 'text-violet-300 group-hover:text-violet-200', spotlight: 'rgba(139,92,246,0.2)' },
+}
+
+// "Meet The Builders" — clicking a Domains card above scrolls here and
+// auto-selects the matching filter pill. Keys are the Domains section
+// titles; values are the corresponding builder-filter label.
+const domainFilterMap = {
+  'Web & App Development': 'Web Development',
+  'AI & Machine Learning': 'Machine Learning',
+  'Cybersecurity': 'Cybersecurity',
+}
+const builderFilters = ['All', 'Web Development', 'Machine Learning', 'Graphics Design', 'Management', 'Technical', 'Non-Technical', 'Cybersecurity']
+const domainAccent = {
+  'Web Development': { text: 'text-blue-300', bg: 'bg-blue-500/15', ring: 'ring-blue-400/30', dot: 'bg-blue-400/70' },
+  'Machine Learning': { text: 'text-violet-300', bg: 'bg-violet-500/15', ring: 'ring-violet-400/30', dot: 'bg-violet-400/70' },
+  'Cybersecurity': { text: 'text-rose-300', bg: 'bg-rose-500/15', ring: 'ring-rose-400/30', dot: 'bg-rose-400/70' },
+  'Graphics Design': { text: 'text-pink-300', bg: 'bg-pink-500/15', ring: 'ring-pink-400/30', dot: 'bg-pink-400/70' },
+  'Management': { text: 'text-amber-300', bg: 'bg-amber-500/15', ring: 'ring-amber-400/30', dot: 'bg-amber-400/70' },
+  'Technical': { text: 'text-cyan-300', bg: 'bg-cyan-500/15', ring: 'ring-cyan-400/30', dot: 'bg-cyan-400/70' },
+  'Non-Technical': { text: 'text-teal-300', bg: 'bg-teal-500/15', ring: 'ring-teal-400/30', dot: 'bg-teal-400/70' },
+}
+// Real TechHub roster (from MemberStories). Skills and featured-work lines
+// are inferred from each member's team, since only name/role/quote were
+// available — swap these two fields in for the real specifics, and add
+// github/linkedin links once you have them.
+const builders = [
+  { name: 'Aditya Kumar Parida', domain: 'Management', year: '3rd Year', tagline: 'Bringing people together to make every event actually happen.', photo: adityaParida },
+  { name: 'M Deepti', domain: 'Non-Technical', year: '3rd Year', tagline: 'Turning small details into events people genuinely enjoy.', photo: deepti },
+  { name: 'Biswajeet Senapati', domain: 'Web Development', year: '3rd Year', tagline: 'Building modern web experiences, one shipped project at a time.', photo: biswajeet },
+  { name: 'Pratikshya Panda', domain: 'Graphics Design', year: '3rd Year', tagline: 'Designing with purpose, not just making things look pretty.', photo: pratikshya },
+  { name: 'Asish Kumar Dhal', domain: 'Technical', year: '3rd Year', tagline: 'Curious about what happens behind every interface you use.', photo: asish },
+  { name: 'Debasish Dash', domain: 'Management', year: '4th Year', tagline: 'Leading teams and keeping every event running smoothly.', photo: debasish },
+  { name: 'Tapas Ranjan', domain: 'Graphics Design', year: '3rd Year', tagline: 'Designing experiences that start with empathy, not software.', photo: tapas },
+  { name: 'Smruti Ranjan Kabi', domain: 'Technical', year: '4th Year', tagline: 'Building with structure, mentorship, and a clear roadmap.', photo: smruti },
+  { name: 'Mayank Mishra', domain: 'Cybersecurity', year: '3rd Year', tagline: 'Turning curiosity about security into a real passion.', photo: mayank },
+  { name: 'Ansuman Patra', domain: 'Machine Learning', year: '3rd Year', tagline: 'Training models and turning them into real, working solutions.', photo: ansuman },
+  { name: 'Arati Patra', domain: 'Technical', year: '3rd Year', tagline: 'Building real experience, one club project at a time.', photo: arati },
+  { name: 'R Adhiraj', domain: 'Machine Learning', year: '3rd Year', tagline: 'Exploring AI, one model and one teammate at a time.', photo: adhiraj },
+  { name: 'Aditya Vajpayee', domain: 'Graphics Design', year: '3rd Year', tagline: 'Getting better with every design critique and every project.', photo: adityaVajpayee },
+  { name: 'Ashutosh Sahu', domain: 'Web Development', year: '3rd Year', tagline: 'Building applications that real people actually enjoy using.', photo: ashutosh },
+  { name: 'Sandeep', domain: 'Management', year: '3rd Year', tagline: 'Keeping plans on track and every event running like clockwork.', photo: sandeep },
+]
+function getInitials(name) {
+  return name.split(' ').filter(Boolean).slice(0, 3).map((p) => p[0]).join('').toUpperCase()
+}
 const REGISTRATION_LINK = "https://docs.google.com/forms/d/1LvSepXGPgNEVKmITQlpbEOX0YLIQty0ar_Zv7MNhjTg/edit"
 const featuredEvent = {
   title: 'TECH IGNITE',
@@ -95,7 +190,13 @@ const galleryItems = galleryImages.map((image, i) => ({
   title: `TechHub Moment ${i + 1}`,
 }));
 
-function Button({ children, outline = false, href = '#contact' }) { return <a href={href} className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold transition-all ${outline ? 'border border-slate-700 bg-slate-950/30 text-slate-200 hover:border-blue-400/70 hover:bg-slate-900' : 'bg-blue-500 text-white shadow-[0_12px_30px_-12px_rgba(59,130,246,.9)] hover:bg-blue-400'}`}>{children}</a> }
+function Button({ children, outline = false, href = '#contact', to }) {
+  const className = `inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold transition-all ${outline ? 'border border-slate-700 bg-slate-950/30 text-slate-200 hover:border-blue-400/70 hover:bg-slate-900' : 'bg-blue-500 text-white shadow-[0_12px_30px_-12px_rgba(59,130,246,.9)] hover:bg-blue-400'}`
+  // `to` -> internal SPA route (react-router Link, no full page reload).
+  // otherwise -> plain anchor, unchanged, for in-page hashes / external links.
+  if (to) return <Link to={to} className={className}>{children}</Link>
+  return <a href={href} className={className}>{children}</a>
+}
 function SectionTitle({ eyebrow, title, text }) { return <div className="mx-auto mb-12 max-w-2xl text-center"><div className="eyebrow mb-4">{eyebrow}</div><h2 className="section-title-glow relative text-3xl font-semibold text-balance text-white sm:text-5xl"><span className="section-title-shimmer">{title}</span></h2>{text && <p className="muted mt-5 text-base leading-7">{text}</p>}</div> }
 function Reveal({ children, className = '' }) { return <div className={`animate-[rise_.7s_cubic-bezier(.16,1,.3,1)_both] ${className}`}>{children}</div> }
 
@@ -206,6 +307,7 @@ function ContactForm() {
 export default function RefinedHome() {
   useSmoothScroll()
   const [open, setOpen] = useState(false)
+  const [activeDomain, setActiveDomain] = useState('All')
   const aboutSpotlightRef = useRef(null)
   function handleAboutMouseMove(e) {
     const el = aboutSpotlightRef.current
@@ -216,6 +318,13 @@ export default function RefinedHome() {
     el.style.setProperty('--spot-x', `${x}%`)
     el.style.setProperty('--spot-y', `${y}%`)
   }
+  // Domains card -> Meet The Builders: activate the matching filter, then
+  // smooth-scroll down to the section instead of navigating away.
+  function handleDomainClick(title) {
+    setActiveDomain(domainFilterMap[title] || 'All')
+    scrollToSection('builders')
+  }
+  const filteredBuilders = activeDomain === 'All' ? builders : builders.filter((b) => b.domain === activeDomain)
   return <div className="min-h-screen bg-[#030712] text-slate-100">
     <CursorGlow />
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[.08] bg-[#030712]/80 backdrop-blur-xl animate-[navFade_.6s_cubic-bezier(.16,1,.3,1)_both] [animation-delay:.2s]">
@@ -226,7 +335,7 @@ export default function RefinedHome() {
           alt="TechHub Logo"
           className="h-11 w-11 object-contain transition-transform duration-500 ease-out group-hover:-rotate-[10deg] group-hover:scale-110"
         /></span><span className="font-heading text-lg font-semibold tracking-tight text-slate-100 transition-colors duration-300 group-hover:text-white">TECH<span className="text-blue-400">'HUB</span></span></a>
-        <nav className="hidden items-center gap-7 md:flex" aria-label="Primary navigation">{nav.map(([label, href]) => <a key={label} href={href} className="text-sm text-slate-400 transition-colors hover:text-white">{label}</a>)}</nav>
+        <nav className="hidden items-center gap-7 md:flex" aria-label="Primary navigation">{nav.map(([label, href, isRoute]) => isRoute ? <Link key={label} to={href} className="text-sm text-slate-400 transition-colors hover:text-white">{label}</Link> : <a key={label} href={href} className="text-sm text-slate-400 transition-colors hover:text-white">{label}</a>)}</nav>
         <div className="hidden md:block"><Magnet
           padding={50}
           magnetStrength={10}
@@ -238,7 +347,7 @@ export default function RefinedHome() {
         </Magnet></div>
         <button className="rounded-lg p-2 text-slate-300 md:hidden" onClick={() => setOpen(!open)} aria-label={open ? 'Close menu' : 'Open menu'}>{open ? <X /> : <Menu />}</button>
       </div>
-      {open && <nav className="container border-t border-white/[.08] py-4 md:hidden">{nav.map(([label, href]) => <a onClick={() => setOpen(false)} key={label} href={href} className="block rounded-lg px-3 py-3 text-sm text-slate-300 hover:bg-white/[.04]">{label}</a>)}<a onClick={() => setOpen(false)} href="#contact" className="mt-2 block"><Button href="#contact">Query <ArrowRight size={16} /></Button></a></nav>}
+      {open && <nav className="container border-t border-white/[.08] py-4 md:hidden">{nav.map(([label, href, isRoute]) => isRoute ? <Link onClick={() => setOpen(false)} key={label} to={href} className="block rounded-lg px-3 py-3 text-sm text-slate-300 hover:bg-white/[.04]">{label}</Link> : <a onClick={() => setOpen(false)} key={label} href={href} className="block rounded-lg px-3 py-3 text-sm text-slate-300 hover:bg-white/[.04]">{label}</a>)}<a onClick={() => setOpen(false)} href="#contact" className="mt-2 block"><Button href="#contact">Query <ArrowRight size={16} /></Button></a></nav>}
     </header>
 
     <main id="top">
@@ -261,8 +370,55 @@ export default function RefinedHome() {
             <ArrowRight size={17} />
           </Button>
         </Magnet></Reveal>
-          <Reveal className="[animation-delay:.98s]"><Button outline href="#about"><Sparkles size={16} className="text-blue-300" /> Explore our work</Button></Reveal></div><Reveal className="mt-8 flex flex-wrap gap-x-5 gap-y-3 text-xs text-slate-500 [animation-delay:1.1s]"><span className="flex items-center gap-2"><ShieldCheck size={14} className="text-emerald-400" />student-led</span></Reveal></div>
+          <Reveal className="[animation-delay:.98s]"><Button outline href="#about"><Sparkles size={16} className="text-blue-300" /> Explore our work</Button></Reveal>
+          <Reveal className="[animation-delay:1.05s]"><Magnet
+            padding={60}
+            magnetStrength={8}
+          >
+            <Button to="/roadmaps">Plan Your 4 Years (No Panic) 🗺️ <ArrowRight size={16} /></Button>
+          </Magnet></Reveal></div><Reveal className="mt-8 flex flex-wrap gap-x-5 gap-y-3 text-xs text-slate-500 [animation-delay:1.1s]"><span className="flex items-center gap-2"><ShieldCheck size={14} className="text-emerald-400" />student-led</span></Reveal></div>
           <Reveal className="[animation-delay:1.1s]"><div className="surface overflow-hidden rounded-2xl"><div className="flex items-center justify-between border-b border-white/[.08] bg-slate-950/70 px-4 py-3"><div className="flex gap-1.5"><i className="size-2 rounded-full bg-slate-700" /><i className="size-2 rounded-full bg-slate-700" /><i className="size-2 rounded-full bg-slate-700" /></div><span className="font-mono text-[11px] text-slate-500">techhub.jsx</span><span className="size-8" /></div><div className="space-y-3 p-5 font-mono text-xs leading-6 text-slate-400 sm:p-7 sm:text-sm"><div><span className="text-violet-400">import</span> {'{ TechHub }'} <span className="text-violet-400">from</span> <span className="text-blue-400">&apos;@techhub/core&apos;</span>;</div><div className="h-2" /><div><span className="text-violet-400">const</span> <span className="text-white">club</span> = <span className="text-violet-400">new</span> <span className="text-white">TechHub</span>();</div><div className="pl-4 text-blue-300">await club.<span className="text-white">learn</span>();</div><div className="pl-4 text-blue-300">await club.<span className="text-white">build</span>();</div><div className="pl-4 text-blue-300">await club.<span className="text-white">compete</span>();</div><div className="pl-4 text-blue-300">await club.<span className="text-white">mentor</span>();</div><div className="h-2" /><div className="flex items-center justify-between border-t border-white/[.08] pt-4"><span className="flex items-center gap-2 text-emerald-400"><Zap size={14} />techhub.join()</span><span className="text-slate-600">ready</span></div></div></div></Reveal></div><div className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[10px] uppercase tracking-[.2em] text-slate-600 lg:flex"><span>Scroll to explore</span><ChevronDown size={15} /></div>
+      </section>
+
+      <section
+        id="journey"
+        className="section relative overflow-hidden section-fade-top lighting-journey-start"
+      >
+        <div className="ambient-blobs"><span className="blob blob-blue blob-1" /><span className="blob blob-violet blob-2" /></div>
+        <div className="container relative z-10">
+          <SectionTitle eyebrow="Start Your Journey" title="Choose what you want to explore first." />
+          <div className="grid gap-6 lg:grid-cols-2">
+            {journeyCards.map(({ to, icon: Icon, accent, title, description, cta }, i) => {
+              const a = journeyAccent[accent]
+              return (
+                <ScrollReveal key={to} delay={i * 120}>
+                  <Magnet padding={80} magnetStrength={16}>
+                    <Link to={to} className="journey-card group relative block h-full rounded-3xl focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60">
+                      <span
+                        aria-hidden="true"
+                        className={`pointer-events-none absolute -inset-px rounded-3xl bg-gradient-to-br ${a.glow} to-transparent opacity-60 blur-[1px] transition-opacity duration-500 group-hover:opacity-100`}
+                      />
+                      <SpotlightCard
+                        className="surface surface-elevated relative h-full overflow-hidden rounded-3xl p-8 transition-all duration-500 group-hover:-translate-y-1.5 sm:p-10"
+                        spotlightColor={a.spotlight}
+                        style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
+                      >
+                        <span className={`grid size-14 place-items-center rounded-2xl transition-transform duration-500 group-hover:scale-110 ${a.chip}`}>
+                          <Icon size={26} />
+                        </span>
+                        <h3 className="mt-8 font-heading text-2xl font-semibold text-white sm:text-3xl">{title}</h3>
+                        <p className="muted mt-4 max-w-md text-sm leading-7 sm:text-base">{description}</p>
+                        <span className={`mt-8 inline-flex items-center gap-2 text-sm font-semibold transition-all duration-300 group-hover:gap-3 ${a.cta}`}>
+                          {cta} <ArrowRight size={16} />
+                        </span>
+                      </SpotlightCard>
+                    </Link>
+                  </Magnet>
+                </ScrollReveal>
+              )
+            })}
+          </div>
+        </div>
       </section>
 
       <section className="border-y border-white/[.07] bg-slate-950/30"><div className="container grid grid-cols-3 divide-x divide-white/[.07]">{stats.map(([num, suffix, label, Icon]) => (
@@ -404,7 +560,107 @@ export default function RefinedHome() {
             waveAmplitude={0}
           />
         </div>
-        <div className="container relative z-10"><SectionTitle eyebrow="Explore your edge" title="A domain for every kind of builder" text="Start with what excites you. Build the skills and confidence to go further." /><div className="bento-grid grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{domains.map(([number, title, text, Icon], i) => <ScrollReveal key={title} delay={i * 80}><div role="button" tabIndex={0} onClick={() => scrollToSection('events')} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollToSection('events') } }} aria-label={`View events for ${title}`} className="surface bento-card domain-card group h-full cursor-pointer rounded-2xl p-5 transition-transform duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 sm:p-6"><div className="flex items-start justify-between"><Icon size={23} className="domain-icon text-blue-400" /><span className="font-mono text-xs text-slate-600">{number}</span></div><h3 className="mt-12 font-heading text-lg font-semibold text-white">{title}</h3><p className="muted mt-2 text-sm leading-6">{text}</p><ArrowRight size={16} className="mt-5 text-slate-600 transition-transform group-hover:translate-x-1 group-hover:text-blue-300" /></div></ScrollReveal>)}</div></div></section>
+        <div className="container relative z-10"><SectionTitle eyebrow="Explore your edge" title="A domain for every kind of builder" text="Start with what excites you. Build the skills and confidence to go further." /><div className="bento-grid grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{domains.map(([number, title, text, Icon], i) => <ScrollReveal key={title} delay={i * 80}><div role="button" tabIndex={0} onClick={() => handleDomainClick(title)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleDomainClick(title) } }} aria-label={`Meet the ${title} builders`} className="surface bento-card domain-card group h-full cursor-pointer rounded-2xl p-5 transition-transform duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 sm:p-6"><div className="flex items-start justify-between"><Icon size={23} className="domain-icon text-blue-400" /><span className="font-mono text-xs text-slate-600">{number}</span></div><h3 className="mt-12 font-heading text-lg font-semibold text-white">{title}</h3><p className="muted mt-2 text-sm leading-6">{text}</p><ArrowRight size={16} className="mt-5 text-slate-600 transition-transform group-hover:translate-x-1 group-hover:text-blue-300" /></div></ScrollReveal>)}</div></div></section>
+
+      <section
+        id="builders"
+        className="section relative overflow-hidden bg-slate-950/25 section-fade-top lighting-builders"
+      >
+        <div className="ambient-blobs z-0"><span className="blob blob-emerald blob-1" /><span className="blob blob-blue blob-3" /></div>
+
+        <div className="container relative z-10">
+          <SectionTitle
+            eyebrow="Meet the builders"
+            title="The people behind TechHub."
+            text="Real seniors, real domains — put a face to the community you're about to join."
+          />
+
+          <ScrollReveal>
+            <div role="tablist" aria-label="Filter builders by domain" className="mb-10 flex flex-wrap justify-center gap-2.5">
+              {builderFilters.map((filter) => <button
+                key={filter}
+                type="button"
+                role="tab"
+                aria-selected={activeDomain === filter}
+                onClick={() => setActiveDomain(filter)}
+                className={`filter-pill rounded-full border px-4 py-2 text-xs font-medium transition-all duration-300 sm:text-sm ${activeDomain === filter ? 'border-blue-400/50 bg-blue-500/15 text-blue-200 shadow-[0_0_20px_-6px_rgba(59,130,246,.6)]' : 'border-white/10 bg-white/[.03] text-slate-400 hover:border-white/20 hover:bg-white/[.06] hover:text-slate-200'}`}
+              >{filter}</button>)}
+            </div>
+          </ScrollReveal>
+
+          {/* Remounting the grid on activeDomain change replays each card's
+              rise-in animation, giving the filter switch a smooth transition
+              without any extra animation library. */}
+          <div key={activeDomain} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredBuilders.map((member, i) => {
+              const accent = domainAccent[member.domain] ?? domainAccent['Web Development']
+              return <div
+                key={member.name}
+                tabIndex={0}
+                className="builder-card group relative rounded-[22px] animate-[rise_.6s_cubic-bezier(.16,1,.3,1)_both] focus-visible:outline-none"
+                style={{ animationDelay: `${i * 60}ms` }}
+              >
+                {/* Ambient blue/violet glow — sits behind the card, never moves it, only fades in */}
+                <div className="pointer-events-none absolute -inset-3 -z-10 rounded-[28px] bg-gradient-to-br from-blue-500/25 via-violet-500/15 to-transparent opacity-0 blur-2xl transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus-within:opacity-100" />
+
+                {/* Card frame — static, never translates or scales; only its contents animate */}
+                <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[22px] ring-1 ring-white/[.08] transition-shadow duration-500 ease-out group-hover:ring-white/[.14] group-focus-within:ring-2 group-focus-within:ring-blue-400/60">
+
+                  {/* Portrait photo — fills the frame, gently zooms on hover */}
+                  {member.photo ? (
+                    <img
+                      src={member.photo}
+                      alt={member.name}
+                      loading="lazy"
+                      className="absolute inset-0 size-full origin-center object-cover transition-transform duration-[600ms] ease-out will-change-transform group-hover:scale-[1.05] group-focus-within:scale-[1.05]"
+                    />
+                  ) : (
+                    <div
+                      className={`absolute inset-0 flex items-center justify-center font-heading text-5xl font-semibold ${accent.bg} ${accent.text} transition-transform duration-[600ms] ease-out will-change-transform group-hover:scale-[1.05] group-focus-within:scale-[1.05]`}
+                    >
+                      {getInitials(member.name)}
+                    </div>
+                  )}
+
+                  {/* Base gradient — always on, keeps name/domain legible over any photo */}
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+
+                  {/* Dark glass overlay — fades in on hover to seat the revealed copy */}
+                  <div className="pointer-events-none absolute inset-0 bg-slate-950/50 opacity-0 backdrop-blur-[2px] transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus-within:opacity-100" />
+
+                  {/* Bottom content — name/domain always visible, anchored to the base of the frame */}
+                  <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6">
+                    <h3 className="font-heading text-lg font-semibold leading-tight text-white">
+                      {member.name}
+                    </h3>
+                    <p className={`mt-1 text-[11px] font-semibold uppercase tracking-[0.2em] ${accent.text}`}>
+                      {member.domain}
+                    </p>
+                  </div>
+
+                  {/* Secondary section — year + tagline, clearly separated from identity block above,
+                      revealed with a subtle upward fade (opacity + translateY only) */}
+                  <div className="pointer-events-none absolute inset-x-6 bottom-[5.25rem] flex flex-col items-center gap-3 text-center opacity-0 translate-y-4 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0">
+                    <span className="h-px w-8 bg-white/20" aria-hidden="true" />
+                    <div>
+                      <p className="font-mono text-[10px] tracking-[0.18em] text-slate-400">
+                        {member.year}
+                      </p>
+                      {member.tagline && (
+                        <p className="mt-3 line-clamp-3 text-sm italic leading-7 text-slate-100">
+                          "{member.tagline}"
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            })}
+          </div>
+
+          {filteredBuilders.length === 0 && <p className="muted mt-12 text-center text-sm">No builders listed in this domain yet — check back soon.</p>}
+        </div>
+      </section>
 
       <section className="section relative overflow-hidden section-fade-top lighting-whyjoin">
         <div
