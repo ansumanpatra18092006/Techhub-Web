@@ -16,24 +16,9 @@ import ScrollReveal from './ScrollReveal'
 
 import techhubLogo from '../assets/techhub-logo.png'
 
-// Reused member photos — same roster as RefinedHome. Swap any of these
-// for real founder / early-team / hall-of-fame photos as they come in;
-// every place a photo is used below reads from the arrays further down,
-// so replacing an import here is all that's needed.
-// import adityaParida from '../assets/builders/aditya-parida.jpeg'
-// import ansuman from '../assets/builders/ansuman.jpeg'
-// import arati from '../assets/builders/arati.jpeg'
-// import deepti from '../assets/builders/deepti.png'
-// import biswajeet from '../assets/builders/biswajeet.png'
-// import pratikshya from '../assets/builders/pratikshya.png'
-// import asish from '../assets/builders/asish.png'
-// import debasish from '../assets/builders/debasish.jpeg'
-// import tapas from '../assets/builders/tapas.png'
-// import mayank from '../assets/builders/mayank.jpeg'
-// import sandeep from '../assets/builders/sandeep.jpeg'
-// import adhiraj from '../assets/builders/adhiraj.png'
-// import adityaVajpayee from '../assets/builders/aditya-vajpayee.png'
-// import ashutosh from '../assets/builders/ashutosh.jpeg'
+// Temporary reusable source for founder, early-team, and Hall of Fame portraits.
+// Replace this one path with the real member photo source when assets are ready.
+const MEMBER_PLACEHOLDER = '/placeholder-user.jpg'
 
 // Reused gallery photos — same set as RefinedHome's DriftWall.
 import p1 from '../assets/gallery/p1.jpeg'
@@ -267,15 +252,15 @@ const originStory = [
 const founder = {
     name: 'Aditya Kumar Parida',
     role: 'Founding Lead, TechHub',
-    photo: adityaParida,
+    photo: MEMBER_PLACEHOLDER,
     quote: 'We didn\u2019t set out to build a club. We set out to build the community we wished existed on our first day.',
 }
 
 const earlyTeam = [
-    { name: 'Debasish Dash', role: 'Early core team', photo: debasish },
-    { name: 'Biswajeet Senapati', role: 'Early core team', photo: biswajeet },
-    { name: 'M Deepti', role: 'Early core team', photo: deepti },
-    { name: 'Tapas Ranjan', role: 'Early core team', photo: tapas },
+    { name: 'Debasish Dash', role: 'Early core team', photo: MEMBER_PLACEHOLDER },
+    { name: 'Biswajeet Senapati', role: 'Early core team', photo: MEMBER_PLACEHOLDER },
+    { name: 'M Deepti', role: 'Early core team', photo: MEMBER_PLACEHOLDER },
+    { name: 'Tapas Ranjan', role: 'Early core team', photo: MEMBER_PLACEHOLDER },
 ]
 
 const traditionalApproach = [
@@ -299,12 +284,12 @@ const milestones = [
 ]
 
 const hallOfFame = [
-    { name: 'Ansuman Patra', photo: ansuman, tag: 'Hackathon Finalist', icon: Trophy, desc: 'Took a machine-learning idea from a TechHub workshop all the way to a national finals stage.' },
-    { name: 'Mayank Mishra', photo: mayank, tag: 'Security Researcher', icon: ShieldCheck, desc: 'Turned a curiosity spark from a TechHub cybersecurity session into a real specialization.' },
-    { name: 'Arati Patra', photo: arati, tag: 'Open Source Contributor', icon: GitBranch, desc: 'Merged pull requests into projects used well beyond campus — started with a TechHub build night.' },
-    { name: 'Asish Kumar Dhal', photo: asish, tag: 'Internship, Landed Early', icon: Briefcase, desc: 'Walked into interviews with a portfolio of real, shipped projects instead of a blank resume.' },
-    { name: 'R Adhiraj', photo: adhiraj, tag: 'Project Builder', icon: Rocket, desc: 'Shipped more prototypes in one year than most people ship in four.' },
-    { name: 'Pratikshya Panda', photo: pratikshya, tag: 'Team Lead', icon: Users, desc: 'Went from first-year attendee to leading the design team that runs every TechHub event today.' },
+    { name: 'Ansuman Patra', photo: MEMBER_PLACEHOLDER, tag: 'Hackathon Finalist', icon: Trophy, desc: 'Took a machine-learning idea from a TechHub workshop all the way to a national finals stage.' },
+    { name: 'Mayank Mishra', photo: MEMBER_PLACEHOLDER, tag: 'Security Researcher', icon: ShieldCheck, desc: 'Turned a curiosity spark from a TechHub cybersecurity session into a real specialization.' },
+    { name: 'Arati Patra', photo: MEMBER_PLACEHOLDER, tag: 'Open Source Contributor', icon: GitBranch, desc: 'Merged pull requests into projects used well beyond campus — started with a TechHub build night.' },
+    { name: 'Asish Kumar Dhal', photo: MEMBER_PLACEHOLDER, tag: 'Internship, Landed Early', icon: Briefcase, desc: 'Walked into interviews with a portfolio of real, shipped projects instead of a blank resume.' },
+    { name: 'R Adhiraj', photo: MEMBER_PLACEHOLDER, tag: 'Project Builder', icon: Rocket, desc: 'Shipped more prototypes in one year than most people ship in four.' },
+    { name: 'Pratikshya Panda', photo: MEMBER_PLACEHOLDER, tag: 'Team Lead', icon: Users, desc: 'Went from first-year attendee to leading the design team that runs every TechHub event today.' },
 ]
 
 const galleryPhotos = [
