@@ -274,7 +274,7 @@ const originStory = [
 ]
 
 const founder = {
-    name: 'Aditya Kumar Parida',
+    name: 'Lallu Prasad Panda',
     role: 'Founding Lead, TechHub',
     photo: MEMBER_PLACEHOLDER,
     quote: 'We didn\u2019t set out to build a club. We set out to build the community we wished existed on our first day.',
