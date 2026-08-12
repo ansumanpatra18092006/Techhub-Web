@@ -37,8 +37,11 @@ TECHHUB WEB
 │   │   │   ├── adhiraj.png
 │   │   │   ├── aditya-parida.jpeg
 │   │   │   ├── aditya-vajpayee.png
+│   │   │   ├── akankshya.jpeg
 │   │   │   ├── ansuman.jpeg
+│   │   │   ├── aparajita.jpeg
 │   │   │   ├── arati.jpeg
+│   │   │   ├── arvind.jpeg
 │   │   │   ├── ashutosh.jpeg
 │   │   │   ├── asish.png
 │   │   │   ├── biswajeet.png
@@ -46,8 +49,13 @@ TECHHUB WEB
 │   │   │   ├── deepti.png
 │   │   │   ├── desktop.ini
 │   │   │   ├── disha.png
+│   │   │   ├── kanhu.jpeg
+│   │   │   ├── kapileswar.jpeg
+│   │   │   ├── lallu.jpeg
 │   │   │   ├── mayank.jpeg
 │   │   │   ├── pratikshya.png
+│   │   │   ├── rashmi.jpeg
+│   │   │   ├── rashmita.jpeg
 │   │   │   ├── sandeep.jpeg
 │   │   │   ├── smruti.png
 │   │   │   └── tapas.png

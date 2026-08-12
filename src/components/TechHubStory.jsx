@@ -1,969 +1,1093 @@
-import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import {
-    ArrowRight, ArrowDown, Sparkles, Users, Rocket, Target, Lightbulb,
-    Code2, BrainCircuit, ShieldCheck, Trophy, GitBranch, Briefcase,
-    GraduationCap, Globe2, Handshake, X, ChevronLeft, ChevronRight, Flag,
-    PartyPopper, Layers, Compass, MessagesSquare, Building2, ArrowUpRight, Quote,
-} from 'lucide-react'
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 
-import Aurora from './reactbits/Aurora'
-import Magnet from '../../components/Magnet'
-import SpotlightCard from '../../components/SpotlightCard'
-import CountUp from '../../components/CountUp'
-import DotField from '../../components/DotField'
-import ScrollReveal from './ScrollReveal'
+// --- ALUMNI ASSETS (SUPER SENIORS) ---
+import lallu from '../assets/builders/lallu.jpeg';
+import aparajita from '../assets/builders/aparajita.jpeg';
+import arvind from '../assets/builders/arvind.jpeg';
+import akankshya from '../assets/builders/akankshya.jpeg';
+import rashmita from '../assets/builders/rashmita.jpeg';
+import kanhu from '../assets/builders/kanhu.jpeg';
+import rashmi from '../assets/builders/rashmi.jpeg';
 
-import techhubLogo from '../assets/techhub-logo.png'
+// --- ACHIEVEMENT BUILDER ASSETS ---
+import ansuman from '../assets/builders/ansuman.jpeg';
+import mayank from '../assets/builders/mayank.jpeg';
+import arati from '../assets/builders/arati.jpeg';
+import asish from '../assets/builders/asish.png';
+import adityaParida from '../assets/builders/aditya-parida.jpeg';
 
-// TEMPORARY: member/founder/hall-of-fame photos are not wired up yet.
-// MEMBER_PLACEHOLDER is a single reusable inline SVG (neutral gradient +
-// silhouette bust) used everywhere a real photo would normally go —
-// founder.photo, earlyTeam[].photo, hallOfFame[].photo. No external URL,
-// no missing-asset risk. Swap it out per-entry once real photos land;
-// every image tag below is left exactly as designed, just pointed at
-// this constant for now.
-const MEMBER_PLACEHOLDER =
-    'data:image/svg+xml;utf8,' +
-    encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1e293b" />
-      <stop offset="55%" stop-color="#0f172a" />
-      <stop offset="100%" stop-color="#030712" />
-    </linearGradient>
-    <radialGradient id="glow" cx="50%" cy="38%" r="65%">
-      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.28" />
-      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
-    </radialGradient>
-  </defs>
-  <rect width="400" height="500" fill="url(#bg)" />
-  <rect width="400" height="500" fill="url(#glow)" />
-  <circle cx="200" cy="205" r="72" fill="#334155" fill-opacity="0.65" />
-  <path d="M80 460c8-92 76-152 120-152s112 60 120 152z" fill="#334155" fill-opacity="0.65" />
-</svg>`.trim())
+// --- GALLERY ASSETS ---
+import p1 from '../assets/gallery/p1.jpeg';
+import p2 from '../assets/gallery/p2.jpeg';
+import p3 from '../assets/gallery/p3.jpeg';
+import p4 from '../assets/gallery/p4.jpeg';
+import p5 from '../assets/gallery/p5.jpeg';
+import p7 from '../assets/gallery/p7.jpeg';
+import p12 from '../assets/gallery/p12.jpeg';
+import p15 from '../assets/gallery/p15.jpeg';
+import p18 from '../assets/gallery/p18.jpeg';
+import p22 from '../assets/gallery/p22.jpeg';
+import p25 from '../assets/gallery/p25.jpeg';
+import p9 from '../assets/gallery/p9.jpeg';
+import p11 from '../assets/gallery/p11.jpeg';
+import p14 from '../assets/gallery/p14.jpeg';
+import p17 from '../assets/gallery/p17.jpeg';
+import p24 from '../assets/gallery/p24.jpeg';
+import p23 from '../assets/gallery/p23.jpeg';
 
-// Reused gallery photos — same set as RefinedHome's DriftWall.
-import p1 from '../assets/gallery/p1.jpeg'
-import p2 from '../assets/gallery/p2.jpeg'
-import p3 from '../assets/gallery/p3.jpeg'
-import p4 from '../assets/gallery/p4.jpeg'
-import p5 from '../assets/gallery/p5.jpeg'
-import p6 from '../assets/gallery/p6.jpeg'
-import p7 from '../assets/gallery/p7.jpeg'
-import p8 from '../assets/gallery/p8.jpeg'
-import p9 from '../assets/gallery/p9.jpeg'
-import p10 from '../assets/gallery/p10.jpeg'
-import p11 from '../assets/gallery/p11.jpeg'
-import p12 from '../assets/gallery/p12.jpeg'
+// ============================================================
+// DATA DRIVEN ARCHITECTURE
+// ============================================================
 
-// ---------------------------------------------------------------------------
-// DESIGN PLAN — "Our Story" (Orientation keynote)
-// ---------------------------------------------------------------------------
-// Brief: this is a talk given from a stage during orientation, not a page
-// someone scrolls through alone. Same dark canvas as RefinedHome (#030712
-// base, Aurora, glass surfaces, blue/violet accents) so it still reads as
-// one site — but now built as eleven full-height slides, one idea each,
-// with a numbered slide rail on the right so a presenter (or a curious
-// student) always knows where they are in the talk. Content and data are
-// unchanged from the previous version; only pacing, scale, and structure
-// were redesigned.
-// ---------------------------------------------------------------------------
-
-const REGISTRATION_LINK = 'https://docs.google.com/forms/d/1LvSepXGPgNEVKmITQlpbEOX0YLIQty0ar_Zv7MNhjTg/edit'
-// TODO: swap in the live TechHub WhatsApp community invite link.
-const WHATSAPP_LINK = '#'
-
-// Every slide in the talk, in order. This single list drives the numbered
-// "03 / 11" labels on each section AND the slide-rail navigation on the
-// right, so the two can never drift out of sync.
-const SLIDES = [
-    { id: 'hero', label: 'Opening' },
-    { id: 'problem', label: 'The Problem' },
-    { id: 'realization', label: 'The Realization' },
-    { id: 'beginning', label: 'The Beginning' },
-    { id: 'first-steps', label: 'First Steps' },
-    { id: 'growth', label: 'Growth' },
-    { id: 'hall-of-fame', label: 'Hall Of Fame' },
-    { id: 'different', label: 'What Makes Us Different' },
-    { id: 'gallery', label: 'Gallery' },
-    { id: 'vision', label: 'Vision' },
-    { id: 'final', label: 'The Next Chapter' },
-]
-const slideNumber = (id) => SLIDES.findIndex((s) => s.id === id) + 1
-
-function scrollToSection(id) {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-}
-
-// Subtle scroll-linked drift, used only on hero decoration layers.
-// Mirrors the CursorGlow rAF pattern already used on the Home page.
-function useParallax(speed = 0.15) {
-    const ref = useRef(null)
-    useEffect(() => {
-        const el = ref.current
-        if (!el) return
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-        let raf = null
-        function update() {
-            raf = null
-            const rect = el.getBoundingClientRect()
-            el.style.transform = `translateY(${rect.top * speed}px)`
-        }
-        function onScroll() {
-            if (raf) return
-            raf = requestAnimationFrame(update)
-        }
-        window.addEventListener('scroll', onScroll, { passive: true })
-        update()
-        return () => window.removeEventListener('scroll', onScroll)
-    }, [speed])
-    return ref
-}
-
-// Tracks which slide is centered in the viewport, so the slide rail and
-// (eventually) any other "current position" UI stay in sync while scrolling.
-function useActiveSlide() {
-    const [activeId, setActiveId] = useState('hero')
-    useEffect(() => {
-        const sections = SLIDES.map((s) => document.getElementById(s.id)).filter(Boolean)
-        if (!sections.length) return
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) setActiveId(entry.target.id)
-                })
-            },
-            { rootMargin: '-42% 0px -42% 0px', threshold: 0 }
-        )
-        sections.forEach((el) => observer.observe(el))
-        return () => observer.disconnect()
-    }, [])
-    return activeId
-}
-
-// "03 / 11" — the small presenter-facing counter that opens every slide,
-// so the talk always feels like a sequence rather than an endless scroll.
-function SlideNumber({ id }) {
-    const n = slideNumber(id)
-    return (
-        <div className="mb-5 flex items-center justify-center gap-3 font-mono text-[11px] tracking-[0.35em] text-slate-500">
-            <span className="h-px w-6 bg-slate-700" />
-            {String(n).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
-            <span className="h-px w-6 bg-slate-700" />
-        </div>
-    )
-}
-
-// Fixed right-edge slide rail — click any dot to jump straight to that
-// slide. This is the one signature interaction that makes the page feel
-// like it's being driven from a clicker, not scrolled past.
-function SlideRail({ activeId }) {
-    return (
-        <div className="pointer-events-none fixed inset-y-0 right-5 z-40 hidden items-center lg:flex xl:right-8">
-            <div className="pointer-events-auto flex flex-col items-end gap-3.5">
-                {SLIDES.map((s) => {
-                    const active = s.id === activeId
-                    return (
-                        <button
-                            key={s.id}
-                            onClick={() => scrollToSection(s.id)}
-                            aria-label={`Go to slide: ${s.label}`}
-                            aria-current={active}
-                            className="group flex items-center gap-3"
-                        >
-                            <span
-                                className={`whitespace-nowrap text-[11px] font-medium uppercase tracking-wider transition-all duration-300 ${active
-                                    ? 'translate-x-0 text-white opacity-100'
-                                    : 'translate-x-2 text-slate-500 opacity-0 group-hover:translate-x-0 group-hover:opacity-100'
-                                    }`}
-                            >
-                                {s.label}
-                            </span>
-                            <span
-                                className={`block rounded-full transition-all duration-300 ${active ? 'h-6 w-1.5 bg-blue-400' : 'h-1.5 w-1.5 bg-slate-600 group-hover:bg-slate-400'
-                                    }`}
-                            />
-                        </button>
-                    )
-                })}
-            </div>
-        </div>
-    )
-}
-
-function SectionTitle({ id, eyebrow, title, text, align = 'center' }) {
-    const wrap = align === 'left' ? 'mb-14 max-w-2xl text-left' : 'mx-auto mb-14 max-w-3xl text-center'
-    return (
-        <div className={wrap}>
-            {id && <SlideNumber id={id} />}
-            <div className="eyebrow mb-5">{eyebrow}</div>
-            <h2 className="section-title-glow relative text-4xl font-semibold text-balance text-white sm:text-6xl">
-                <span className="section-title-shimmer">{title}</span>
-            </h2>
-            {text && <p className="muted mx-auto mt-6 max-w-xl text-base leading-7 sm:text-lg">{text}</p>}
-        </div>
-    )
-}
-
-function Reveal({ children, className = '' }) {
-    return <div className={`animate-[rise_.7s_cubic-bezier(.16,1,.3,1)_both] ${className}`}>{children}</div>
-}
-
-// A full-height "slide" wrapper. Every act of the talk gets one of these:
-// generous top/bottom breathing room, a floor on height so nothing feels
-// cramped on a projector, and a slot for the usual ambient decoration.
-function Slide({ id, className = '', innerClassName = '', children }) {
-    return (
-        <section
-            id={id}
-            className={`section relative flex min-h-[100dvh] items-center overflow-hidden py-24 sm:py-28 ${className}`}
-        >
-            <div className={`container relative z-10 w-full ${innerClassName}`}>{children}</div>
-        </section>
-    )
-}
-
-// ---------------------------------------------------------------------------
-// Content
-// ---------------------------------------------------------------------------
-
-const heroStats = [
-    { value: 3, suffix: '+', label: 'years building together' },
-    { value: 40, suffix: '+', label: 'projects shipped' },
-    { value: 20, suffix: '+', label: 'active builders' },
-]
-
-const problemBefore = [
-    { icon: Compass, text: 'Random tutorials with no clear direction' },
-    { icon: Users, text: 'No senior around to ask "is this normal?"' },
-    { icon: Code2, text: 'No community built around real frameworks and tools' },
-    { icon: Target, text: 'Students learning the same lessons alone, one at a time' },
-]
-const problemAfter = [
-    { icon: GraduationCap, text: 'Structured learning paths, built by people who\u2019ve done it' },
-    { icon: Handshake, text: 'Mentorship from seniors who remember being lost too' },
-    { icon: Rocket, text: 'Real projects from week one, not just theory' },
-    { icon: Users, text: 'A community that builds in public, together' },
-]
-
-const realizationLine = 'What if students didn\u2019t have to learn alone?'
-
-const originStory = [
+// 0. SUPER SENIORS (Section 6)
+const superSeniors = [
     {
-        tag: 'The Observation',
-        title: 'Everyone was learning the same things — completely alone.',
-        text: 'Every year, hundreds of first-years arrived curious about code, but with nowhere to point that curiosity. YouTube had answers. No one had a hand to hold.',
+        name: 'Lallu Prasad Panda',
+        role: 'Founder',
+        photo: lallu,
+        company: 'TCS',
+        designation: 'System Engineer',
+        wrapperClass: 'flex justify-center items-center md:col-span-2 lg:col-span-1 lg:col-start-2 lg:row-start-2 z-30',
+        cardClass: 'bg-white p-4 lg:p-5 shadow-2xl rotate-[-1deg] relative border border-gray-100 transition-all duration-300 hover:rotate-0 hover:scale-[1.04] hover:shadow-[0_30px_60px_-10px_rgba(20,22,43,0.3)] hover:z-50 w-full max-w-[300px] sm:max-w-[320px] lg:max-w-[340px] xl:max-w-[360px] mx-auto',
+        tapeClass: 'top-[-12px] left-1/2 -translate-x-1/2 rotate-[2deg] w-28 lg:w-32',
+        imgClass: 'w-full h-[300px] lg:h-[340px] xl:h-[380px] object-cover bg-gray-100 mb-4'
     },
     {
-        tag: 'The Question',
-        title: 'What if curiosity had a community around it?',
-        text: 'A few students kept running into the same people at the same late-night debugging sessions. The question wasn\u2019t whether to start something — it was why no one had yet.',
+        name: 'Aparajita Bharati',
+        role: 'Early Team',
+        photo: aparajita,
+        company: 'Omega Healthcare Solutions',
+        designation: '',
+        wrapperClass: 'flex justify-center lg:justify-end items-end lg:col-start-1 lg:row-start-1 z-20',
+        cardClass: 'bg-white p-3 shadow-xl rotate-[3deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
+        tapeClass: 'top-[-10px] left-8 rotate-[-3deg] w-16 lg:w-20',
+        imgClass: 'w-full h-56 lg:h-52 xl:h-60 object-cover bg-gray-100 mb-4 filter contrast-125 grayscale-[20%]',
+        textClass: 'text-[#00B39B]'
     },
     {
-        tag: 'The Belief',
-        title: 'Guidance, collaboration, and real work beat theory alone.',
-        text: 'We believed students didn\u2019t need another syllabus. They needed people slightly ahead of them, a room to build in, and permission to be bad at something before getting good at it.',
+        name: 'Arvind Padhi',
+        role: 'Early Team',
+        photo: arvind,
+        company: 'Omega Healthcare Management Services',
+        designation: '',
+        wrapperClass: 'flex justify-center lg:justify-end items-start lg:col-start-1 lg:row-start-3 z-20',
+        cardClass: 'bg-white p-3 shadow-xl rotate-[-3deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
+        tapeClass: 'top-[-10px] right-8 rotate-[4deg] w-20 lg:w-24',
+        imgClass: 'w-full h-56 lg:h-52 xl:h-56 object-cover bg-gray-100 mb-4',
+        textClass: 'text-[#4C6FFF]'
     },
     {
-        tag: 'The Decision',
-        title: 'So instead of waiting for it, we built it.',
-        text: 'No department budget, no head start — just a shared login, a WhatsApp group, and a plan to meet every week. That plan became TechHub.',
+        name: 'Rashmi Ranjan Badjena',
+        role: 'Early Team',
+        photo: rashmi,
+        company: 'TCS',
+        designation: '',
+        wrapperClass: 'flex justify-center lg:justify-end items-center lg:col-start-1 lg:row-start-2 z-10',
+        cardClass: 'bg-white p-3 shadow-xl rotate-[2deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
+        tapeClass: 'top-[-8px] left-1/2 -translate-x-1/2 rotate-[-2deg] w-16 lg:w-20',
+        imgClass: 'w-full h-52 lg:h-48 xl:h-52 object-cover bg-gray-100 mb-4',
+        textClass: 'text-[#FFD23F]'
     },
-]
-
-const founder = {
-    name: 'Lallu Prasad Panda',
-    role: 'Founding Lead, TechHub',
-    photo: MEMBER_PLACEHOLDER,
-    quote: 'We didn\u2019t set out to build a club. We set out to build the community we wished existed on our first day.',
-}
-
-const earlyTeam = [
-    { name: 'Debasish Dash', role: 'Early core team', photo: MEMBER_PLACEHOLDER },
-    { name: 'Biswajeet Senapati', role: 'Early core team', photo: MEMBER_PLACEHOLDER },
-    { name: 'M Deepti', role: 'Early core team', photo: MEMBER_PLACEHOLDER },
-    { name: 'Tapas Ranjan', role: 'Early core team', photo: MEMBER_PLACEHOLDER },
-]
-
-const traditionalApproach = [
-    'Theory first, projects much later (if ever)',
-    'Progress measured mostly by exams',
-    'Learning happens alone, at your own desk',
-]
-const techhubApproach = [
-    'Build first — understanding follows naturally',
-    'Progress measured by what you\u2019ve shipped',
-    'Learning happens in a room full of people doing the same thing',
-]
-
-const milestones = [
-    { year: '2023', title: 'Club Founded', desc: 'A small group of students decided to stop waiting for a community and start one.', icon: Flag },
-    { year: '2023', title: 'First Team Formed', desc: 'Core roles across development, design, and management came together.', icon: Users },
-    { year: '2024', title: 'First Workshop', desc: 'A packed room, a whiteboard, and a promise to keep it hands-on.', icon: Lightbulb },
-    { year: '2024', title: 'First Orientation', desc: 'The first batch of first-years met the club that would shape their four years.', icon: GraduationCap },
-    { year: '2025', title: 'First Major Event', desc: 'TechHub outgrew a classroom and moved into an auditorium.', icon: PartyPopper },
-    { year: '2025', title: 'First Hackathon Squad', desc: 'TechHub builders competed as a team for the first time — and kept doing it.', icon: Trophy },
-]
-
-const hallOfFame = [
-    { name: 'Ansuman Patra', photo: MEMBER_PLACEHOLDER, tag: 'Hackathon Finalist', icon: Trophy, desc: 'Took a machine-learning idea from a TechHub workshop all the way to a national finals stage.' },
-    { name: 'Mayank Mishra', photo: MEMBER_PLACEHOLDER, tag: 'Security Researcher', icon: ShieldCheck, desc: 'Turned a curiosity spark from a TechHub cybersecurity session into a real specialization.' },
-    { name: 'Arati Patra', photo: MEMBER_PLACEHOLDER, tag: 'Open Source Contributor', icon: GitBranch, desc: 'Merged pull requests into projects used well beyond campus — started with a TechHub build night.' },
-    { name: 'Asish Kumar Dhal', photo: MEMBER_PLACEHOLDER, tag: 'Internship, Landed Early', icon: Briefcase, desc: 'Walked into interviews with a portfolio of real, shipped projects instead of a blank resume.' },
-    { name: 'R Adhiraj', photo: MEMBER_PLACEHOLDER, tag: 'Project Builder', icon: Rocket, desc: 'Shipped more prototypes in one year than most people ship in four.' },
-    { name: 'Pratikshya Panda', photo: MEMBER_PLACEHOLDER, tag: 'Team Lead', icon: Users, desc: 'Went from first-year attendee to leading the design team that runs every TechHub event today.' },
-]
-
-const galleryPhotos = [
-    { image: p1, title: 'Workshop night' },
-    { image: p2, title: 'Orientation day' },
-    { image: p3, title: 'Team meeting' },
-    { image: p4, title: 'Hackathon prep' },
-    { image: p5, title: 'Build session' },
-    { image: p6, title: 'Club activity' },
-    { image: p7, title: 'Workshop night' },
-    { image: p8, title: 'Team meeting' },
-    { image: p9, title: 'Orientation day' },
-    { image: p10, title: 'Build session' },
-    { image: p11, title: 'Hackathon prep' },
-    { image: p12, title: 'Club activity' },
-]
-
-const visionCards = [
-    { title: 'Placement Support', text: 'Helping students prepare for careers.', icon: Briefcase },
-    { title: 'Technical Workshops', text: 'Hands-on learning experiences.', icon: Lightbulb },
-    { title: 'Industry Mentorship', text: 'Connecting students with professionals.', icon: Handshake },
-    { title: 'Open Source Culture', text: 'Building in public.', icon: GitBranch },
-    { title: 'Alumni Network', text: 'Connecting generations of builders.', icon: Building2 },
-    { title: 'Bigger Events', text: 'Scaling impact across campus.', icon: Globe2 },
-]
-
-// Rotation classes used to give the "First Steps" team photos a taped-up,
-// scrapbook feel instead of a tidy grid — reused cyclically per index.
-const polaroidTilts = ['-rotate-3', 'rotate-2', '-rotate-1', 'rotate-3']
-
-// ---------------------------------------------------------------------------
-// Small building blocks
-// ---------------------------------------------------------------------------
-
-function ComparisonList({ items, tone }) {
-    const toneClass = tone === 'after'
-        ? 'bg-emerald-500/10 text-emerald-300'
-        : 'bg-slate-500/10 text-slate-400'
-    return (
-        <ul className="space-y-5">
-            {items.map(({ icon: Icon, text }) => (
-                <li key={text} className="flex items-start gap-3.5">
-                    <span className={`grid size-10 shrink-0 place-items-center rounded-lg ${toneClass}`}>
-                        <Icon size={17} />
-                    </span>
-                    <span className="muted pt-2 text-base leading-7">{text}</span>
-                </li>
-            ))}
-        </ul>
-    )
-}
-
-// One member at a time, presented big — a spotlight moment rather than a
-// resume grid. Arrows and dots let a presenter click through live.
-function HallOfFameSpotlight({ items }) {
-    const [i, setI] = useState(0)
-    const item = items[i]
-    function step(dir) {
-        setI((prev) => (prev + dir + items.length) % items.length)
+    {
+        name: 'Akankshya Jena',
+        role: 'Early Team',
+        photo: akankshya,
+        company: 'Ipsos',
+        designation: 'Market Research Analyst',
+        wrapperClass: 'flex justify-center lg:justify-start items-end lg:col-start-3 lg:row-start-1 z-20',
+        cardClass: 'bg-white p-3 shadow-xl rotate-[-2deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
+        tapeClass: 'top-[-8px] left-4 rotate-[-2deg] w-16 lg:w-20',
+        imgClass: 'w-full h-60 lg:h-56 xl:h-60 object-cover bg-gray-100 mb-4',
+        textClass: 'text-[#FF5D5D]'
+    },
+    {
+        name: 'Simadri Rashmita',
+        role: 'Early Team',
+        photo: rashmita,
+        company: 'Sambal Infratech',
+        designation: '',
+        wrapperClass: 'flex justify-center lg:justify-start items-center lg:col-start-3 lg:row-start-2 z-10',
+        cardClass: 'bg-white p-3 shadow-xl rotate-[4deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
+        tapeClass: 'top-[-10px] left-1/2 -translate-x-1/2 rotate-[-4deg] w-20 lg:w-24',
+        imgClass: 'w-full h-52 lg:h-48 xl:h-52 object-cover bg-gray-100 mb-4',
+        textClass: 'text-[#7C5CFF]'
+    },
+    {
+        name: 'Kanhu',
+        role: 'Early Team',
+        photo: kanhu,
+        company: 'Upgrad',
+        designation: '',
+        wrapperClass: 'flex justify-center lg:justify-start items-start lg:col-start-3 lg:row-start-3 z-20',
+        cardClass: 'bg-white p-3 shadow-xl rotate-[-4deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
+        tapeClass: 'top-[-5px] right-4 rotate-[5deg] w-16 lg:w-20',
+        imgClass: 'w-full h-56 lg:h-52 xl:h-56 object-cover bg-gray-100 mb-4',
+        textClass: 'text-[#00B39B] drop-shadow-sm'
     }
+];
+
+// 1. GAP IDEAS
+const gapIdeas = [
+    {
+        title: "Community",
+        description: "Learning alone is brutal. We realized students needed a tribe—a space where you can share bugs, celebrate small wins, and build momentum together.",
+        colorClass: "bg-[#00B39B] text-white",
+        rotation: "rotate-[-3deg]",
+        annotation: "Find your people"
+    },
+    {
+        title: "Mentorship",
+        description: "Textbooks don't teach you production environments. We created a system where seniors actively guide juniors through real-world tech stacks.",
+        colorClass: "bg-[#4C6FFF] text-white",
+        rotation: "rotate-[2deg]",
+        annotation: "Skip the trial & error"
+    },
+    {
+        title: "Practical Learning",
+        description: "Tutorial hell is real. We shifted the focus from passively watching videos to actively building, breaking, and fixing actual software.",
+        colorClass: "bg-[#FF5D5D] text-white",
+        rotation: "rotate-[-1deg]",
+        annotation: "Build things"
+    },
+    {
+        title: "Building Together",
+        description: "Engineering is a team sport. Through hackathons and weekend sprints, we learned how to collaborate, use Git properly, and ship products.",
+        colorClass: "bg-white text-primary",
+        rotation: "rotate-[3deg]",
+        annotation: "Teamwork > Solo"
+    }
+];
+
+// 2. STATS
+const growthStats = [
+    { value: "2+", label: "Years building", caption: "From an idea to a community.", color: "#FFD23F" },
+    { value: "40+", label: "Projects shipped", caption: "Things people actually built.", color: "#00B39B" },
+    { value: "15+", label: "Active builders", caption: "And still growing.", color: "#4C6FFF" }
+];
+
+// 3. FUTURE VISION PATH
+const visionPath = [
+    { title: "Technical Workshops", text: "Technical Workshops", description: "Deep dives into cutting-edge frameworks, version control, and system design, led by students who have mastered them.", color: "mint" },
+    { title: "Industry Mentorship", text: "Industry Mentorship", description: "Connecting our current builders with alumni working in top tech companies for portfolio reviews and 1-on-1 guidance.", color: "coral" },
+    { title: "Placement Support", text: "Placement Support", description: "Mock interviews, DSA sprints, and resume building sessions tailored specifically for tech roles.", color: "yellow" },
+    { title: "Open Source Culture", text: "Open Source Culture", description: "Fostering an environment where members contribute to real-world OSS projects and build public credibility.", color: "blue" },
+    { title: "Alumni Network", text: "Alumni Network", description: "A lifelong professional network of TechHub graduates helping each other navigate the tech industry.", color: "white" }
+];
+
+// 4. GALLERY (Data Driven Scrapbook)
+const galleryImages = [
+    {
+        src: p1,
+        caption: "The people behind TechHub.",
+        rotation: "rotate-[-2deg]",
+        wrapperClass:
+            "col-span-1 sm:col-span-2 md:col-start-2 md:col-span-2 lg:col-start-3 lg:col-span-4 lg:row-start-1 lg:row-span-2 flex justify-center items-center relative z-20 hover:z-50",
+        imgClass:
+            "w-full h-[300px] md:h-[400px] lg:h-[480px] object-cover",
+        tapeClass:
+            "top-[-12px] left-1/2 -translate-x-1/2 rotate-[2deg] w-28 lg:w-32",
+        delay: 100,
+        doodle: {
+            type: "text",
+            text: "Where it all comes together.",
+            className:
+                "absolute -bottom-8 -right-8 font-handwriting text-[#7C5CFF] text-xl hidden lg:block rotate-[-5deg] opacity-80 z-[-1]",
+        },
+    },
+    {
+        src: p7,
+        caption: "One of those days.",
+        rotation: "rotate-[3deg]",
+        wrapperClass:
+            "col-span-1 md:col-start-1 md:col-span-2 lg:col-start-1 lg:col-span-2 lg:row-start-1 flex justify-center lg:justify-end items-end relative z-10 hover:z-50 lg:translate-x-6 lg:translate-y-12",
+        imgClass:
+            "w-full h-48 md:h-56 lg:h-64 object-cover",
+        tapeClass:
+            "top-[-8px] right-8 rotate-[4deg] w-16 lg:w-20",
+        delay: 200,
+    },
+    {
+        src: p23,
+        caption: "Sharing what we know.",
+        rotation: "rotate-[-4deg]",
+        wrapperClass:
+            "col-span-1 md:col-start-3 md:col-span-2 lg:col-start-7 lg:col-span-2 lg:row-start-1 flex justify-center lg:justify-start items-start relative z-10 hover:z-50 lg:-translate-x-4 lg:translate-y-4",
+        imgClass:
+            "w-full h-40 md:h-48 lg:h-52 object-cover",
+        tapeClass:
+            "top-[-8px] left-6 rotate-[-3deg] w-16 lg:w-20",
+        delay: 300,
+        doodle: {
+            type: "text",
+            text: "Teach. Learn. Repeat.",
+            className:
+                "absolute -top-8 -right-10 font-handwriting text-[#4C6FFF] text-lg hidden lg:block rotate-6 opacity-75",
+        },
+    },
+    {
+        src: p14,
+        caption: "Learn it. Explain it. Build it.",
+        rotation: "rotate-[2deg]",
+        wrapperClass:
+            "col-span-1 md:col-start-1 md:col-span-2 lg:col-start-1 lg:col-span-2 lg:row-start-2 flex justify-center lg:justify-center items-start relative z-10 hover:z-50 lg:translate-x-4 lg:-translate-y-8",
+        imgClass:
+            "w-full h-40 md:h-48 lg:h-48 object-cover",
+        tapeClass:
+            "top-[-8px] left-1/2 -translate-x-1/2 rotate-[1deg] w-12 lg:w-16",
+        delay: 400,
+    },
+    {
+        src: p17,
+        caption: "Nobody builds alone.",
+        rotation: "rotate-[-2deg]",
+        wrapperClass:
+            "col-span-1 md:col-start-3 md:col-span-2 lg:col-start-7 lg:col-span-2 lg:row-start-2 flex justify-center lg:justify-start items-center relative z-10 hover:z-50 lg:-translate-x-8 lg:-translate-y-6",
+        imgClass:
+            "w-full h-48 md:h-56 lg:h-60 object-cover",
+        tapeClass:
+            "top-[-10px] left-10 rotate-[-2deg] w-16 lg:w-20",
+        delay: 500,
+        doodle: {
+            type: "text",
+            text: "Helping each other figure it out.",
+            className:
+                "absolute -bottom-7 -right-8 font-handwriting text-[#FF5D5D] text-lg hidden lg:block rotate-6 opacity-80",
+        },
+    },
+    {
+        src: p11,
+        caption: "Celebrating our builders.",
+        rotation: "rotate-[4deg]",
+        wrapperClass:
+            "col-span-1 md:col-start-1 md:col-span-2 lg:col-start-2 lg:col-span-2 lg:row-start-3 flex justify-center lg:justify-center items-start relative z-10 hover:z-50 lg:translate-x-8 lg:-translate-y-12",
+        imgClass:
+            "w-full h-40 md:h-48 object-cover",
+        tapeClass:
+            "top-[-8px] right-6 rotate-[5deg] w-16 lg:w-20",
+        delay: 600,
+    },
+    {
+        src: p5,
+        caption: "A room full of builders.",
+        rotation: "rotate-[-3deg]",
+        wrapperClass:
+            "col-span-1 sm:col-span-2 md:col-start-2 md:col-span-2 lg:col-start-4 lg:col-span-3 lg:row-start-3 flex justify-center lg:justify-center items-start relative z-10 hover:z-50 lg:-translate-y-14",
+        imgClass:
+            "w-full h-48 md:h-64 object-cover",
+        tapeClass:
+            "top-[-8px] left-1/2 -translate-x-1/2 rotate-[-4deg] w-20 lg:w-24",
+        delay: 700,
+        doodle: {
+            type: "text",
+            text: "Still growing.",
+            className:
+                "absolute -bottom-8 left-4 font-handwriting text-[#00B39B] text-xl hidden lg:block rotate-[-8deg] opacity-80",
+        },
+    },
+    {
+        src: p24,
+        caption: "Helping each other build.",
+        rotation: "rotate-[1deg]",
+        wrapperClass:
+            "col-span-1 md:col-start-3 md:col-span-2 lg:col-start-7 lg:col-span-2 lg:row-start-3 flex justify-center lg:justify-start items-center relative z-10 hover:z-50 lg:-translate-x-6 lg:-translate-y-4",
+        imgClass:
+            "w-full h-40 md:h-48 object-cover",
+        tapeClass:
+            "top-[-8px] right-10 rotate-[2deg] w-16 lg:w-20",
+        delay: 800,
+    },
+    {
+        src: p25,
+        caption: "The best learning happens together.",
+        rotation: "rotate-[-3deg]",
+        wrapperClass:
+            "col-span-1 md:col-start-1 md:col-span-2 lg:col-start-2 lg:col-span-2 lg:row-start-4 flex justify-center items-start relative z-10 hover:z-50 lg:translate-x-2 lg:-translate-y-6",
+        imgClass:
+            "w-full h-44 md:h-52 lg:h-56 object-cover",
+        tapeClass:
+            "top-[-8px] left-8 rotate-[-3deg] w-16 lg:w-20",
+        delay: 900,
+    },
+    {
+        src: p9,
+        caption: "And somehow, the team kept growing.",
+        rotation: "rotate-[3deg]",
+        wrapperClass:
+            "col-span-1 md:col-start-3 md:col-span-2 lg:col-start-5 lg:col-span-3 lg:row-start-4 flex justify-center items-start relative z-10 hover:z-50 lg:translate-y-[-10px]",
+        imgClass:
+            "w-full h-44 md:h-52 lg:h-56 object-cover",
+        tapeClass:
+            "top-[-8px] left-1/2 -translate-x-1/2 rotate-[2deg] w-20 lg:w-24",
+        delay: 1000,
+    },
+];
+
+
+// --- CUSTOM STYLES & ANIMATIONS ---
+const styles = `
+  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Inter:wght@400;600;800;900&display=swap');
+
+  .font-sans { font-family: 'Inter', sans-serif; }
+  .font-handwriting { font-family: 'Caveat', cursive; }
+
+  /* Premium Light Theme Colors */
+  .bg-paper { background-color: #FDFCF8; }
+  .bg-cream { background-color: #F4F2EB; }
+  .text-primary { color: #14162B; }
+  .text-secondary { color: #4B4D63; }
+
+  /* Highlighter Effects */
+  .highlight-blue {
+    background: linear-gradient(104deg, transparent 0%, rgba(76, 111, 255, 0.2) 2%, rgba(76, 111, 255, 0.3) 98%, transparent 100%);
+    border-radius: 4px;
+  }
+  .highlight-mint {
+    background: linear-gradient(104deg, transparent 0%, rgba(0, 179, 155, 0.2) 2%, rgba(0, 179, 155, 0.3) 98%, transparent 100%);
+  }
+
+  /* Section anchor offset */
+  section[id] { scroll-margin-top: 92px; }
+
+  /* Animations */
+  @keyframes float1 {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-15px) rotate(1deg); }
+  }
+  @keyframes float2 {
+    0%, 100% { transform: translateY(0) rotate(3deg); }
+    50% { transform: translateY(-10px) rotate(-1deg); }
+  }
+  @keyframes floatOrbit {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes modalPop {
+    0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes overlayFade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .animate-float-1 { animation: float1 6s ease-in-out infinite; }
+  .animate-float-2 { animation: float2 8s ease-in-out infinite; }
+  .animate-float-orbit { animation: floatOrbit 5s ease-in-out infinite; }
+  .animate-modal-pop { animation: modalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .animate-overlay-fade { animation: overlayFade 0.3s ease-out forwards; }
+
+  /* Paper Shadows & Textures */
+  .shadow-paper {
+    box-shadow: 0 10px 25px -5px rgba(20, 22, 43, 0.05), 0 4px 10px -5px rgba(20, 22, 43, 0.02);
+  }
+  .shadow-polaroid {
+    box-shadow: 0 15px 35px -5px rgba(20, 22, 43, 0.1), 0 5px 15px rgba(0,0,0,0.05);
+  }
+
+  /* Grid Background */
+  .bg-grid-pattern {
+    background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Smooth Scrolling */
+  html { scroll-behavior: smooth; }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Visible keyboard focus */
+  a:focus-visible, button:focus-visible {
+    outline: 3px solid #4C6FFF;
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .animate-float-1, .animate-float-2, .animate-float-orbit { animation: none !important; }
+    * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  }
+`;
+
+// --- SCROLL REVEAL HOOK ---
+const useInView = (threshold = 0.15) => {
+    const ref = useRef(null);
+    const [visible, setVisible] = useState(false);
+
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        if (typeof IntersectionObserver === 'undefined') {
+            setVisible(true);
+            return;
+        }
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setVisible(true);
+                    observer.disconnect();
+                }
+            },
+            { threshold }
+        );
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, [threshold]);
+
+    return [ref, visible];
+};
+
+// --- REUSABLE SCRAPBOOK COMPONENTS ---
+
+// 1. Story Trigger (Handles the click interaction)
+const StoryTrigger = ({ children, onClick, baseRotation = "", className = "" }) => {
+    const [isAnimating, setIsAnimating] = useState(false);
+
+    const handleClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsAnimating(true);
+        setTimeout(() => {
+            onClick();
+            setIsAnimating(false);
+        }, 300); // 300ms matches the transition duration
+    };
+
     return (
-        <div className="mx-auto max-w-4xl">
-            <div className="relative">
-                <SpotlightCard
-                    className="surface surface-elevated overflow-hidden rounded-[28px] p-0"
-                    spotlightColor="rgba(99,102,241,0.18)"
+        <button
+            onClick={handleClick}
+            className={`text-left outline-none transition-all duration-300 ease-out focus-visible:ring-4 focus-visible:ring-[#4C6FFF] ${isAnimating ? 'scale-110 rotate-0 shadow-2xl -translate-y-2 z-50' : `${baseRotation} hover:scale-105 hover:rotate-0 hover:z-40`} ${className}`}
+            aria-haspopup="dialog"
+        >
+            {children}
+        </button>
+    );
+};
+
+// 2. Story Modal (The detailed Scrapbook Popover)
+const StoryModal = ({ isOpen, onClose, data }) => {
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') onClose();
+        };
+        if (isOpen) {
+            window.addEventListener('keydown', handleKeyDown);
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen, onClose]);
+
+    if (!isOpen || !data) return null;
+
+    return (
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="story-modal-title">
+            {/* Backdrop */}
+            <div
+                className="absolute inset-0 bg-[#14162B]/30 backdrop-blur-sm animate-overlay-fade cursor-pointer"
+                onClick={onClose}
+                aria-hidden="true"
+            />
+
+            {/* Modal Card */}
+            <div className="relative w-full max-w-md bg-paper p-8 md:p-10 shadow-polaroid border border-gray-200 animate-modal-pop cursor-default">
+                <Tape className="top-[-12px] left-1/2 -translate-x-1/2 rotate-2 w-32" />
+
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-gray-100/80 text-gray-500 rounded-full hover:bg-[#FF5D5D] hover:text-white transition-colors z-10 font-bold text-xl focus-visible:ring-4 focus-visible:ring-[#14162B]"
+                    aria-label="Close"
                 >
-                    <div className="grid gap-0 sm:grid-cols-[minmax(0,320px)_1fr]">
-                        <div className="relative aspect-[4/5] overflow-hidden sm:aspect-auto">
-                            <img
-                                key={item.name}
-                                src={item.photo}
-                                alt={item.name}
-                                loading="lazy"
-                                className="size-full animate-[rise_.5s_cubic-bezier(.16,1,.3,1)_both] object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#0b1020] via-transparent to-transparent sm:bg-gradient-to-r sm:from-transparent sm:via-transparent" />
-                        </div>
-                        <div className="flex flex-col justify-center p-8 sm:p-12">
-                            <span className="eyebrow mb-5 inline-flex w-fit items-center gap-2">
-                                <item.icon size={14} />
-                                {item.tag}
-                            </span>
-                            <span className="story-quote-mark text-5xl leading-none text-blue-400/40">&ldquo;</span>
-                            <p className="-mt-4 text-xl leading-8 text-slate-100 sm:text-2xl">{item.desc}</p>
-                            <div className="mt-7 border-t border-white/[.08] pt-5 text-base font-semibold text-white">{item.name}</div>
-                        </div>
+                    &times;
+                </button>
+
+                {data.annotation && (
+                    <div className="font-handwriting text-2xl text-[#7C5CFF] mb-3 -rotate-2">
+                        {data.annotation}
                     </div>
-                </SpotlightCard>
-                <button
-                    onClick={() => step(-1)}
-                    aria-label="Previous builder"
-                    className="absolute left-2 top-1/2 grid size-11 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/15 bg-slate-950/85 text-slate-200 backdrop-blur transition-colors hover:bg-slate-900 sm:-left-5"
-                >
-                    <ChevronLeft size={18} />
-                </button>
-                <button
-                    onClick={() => step(1)}
-                    aria-label="Next builder"
-                    className="absolute right-2 top-1/2 grid size-11 -translate-y-1/2 translate-x-1/2 place-items-center rounded-full border border-white/15 bg-slate-950/85 text-slate-200 backdrop-blur transition-colors hover:bg-slate-900 sm:-right-5"
-                >
-                    <ChevronRight size={18} />
-                </button>
-            </div>
-            <div className="mt-9 flex items-center justify-center gap-2">
-                {items.map((m, idx) => (
-                    <button
-                        key={m.name}
-                        onClick={() => setI(idx)}
-                        aria-label={`Show ${m.name}`}
-                        className={`h-1.5 rounded-full transition-all duration-300 ${idx === i ? 'w-8 bg-blue-400' : 'w-1.5 bg-slate-700 hover:bg-slate-500'
-                            }`}
-                    />
-                ))}
+                )}
+
+                <h3 id="story-modal-title" className="text-3xl md:text-4xl font-black text-primary mb-4 leading-tight">
+                    {data.title || data.achievement}
+                </h3>
+
+                <div className="w-12 h-1 bg-[#00B39B] mb-5" />
+
+                <p className="text-lg md:text-xl text-secondary font-medium leading-relaxed font-sans">
+                    {data.description}
+                </p>
             </div>
         </div>
-    )
-}
+    );
+};
 
-function GalleryLightbox({ items, index, onClose, onStep }) {
+const Reveal = ({ children, className = "", delay = 0, as: Tag = "div" }) => {
+    const [ref, visible] = useInView(0.15);
+    return (
+        <Tag
+            ref={ref}
+            className={`reveal ${visible ? 'reveal-visible' : ''} ${className}`}
+            style={{ transitionDelay: visible ? `${delay}ms` : '0ms' }}
+        >
+            {children}
+        </Tag>
+    );
+};
+
+const AnimatedHighlight = ({ children, color = "highlight-blue" }) => {
+    const [ref, visible] = useInView(0.6);
+    return (
+        <span ref={ref} className="relative inline-block whitespace-normal">
+            <span
+                className={`absolute inset-y-0 left-0 -z-10 ${color} origin-left transition-transform duration-[1100ms] ease-out`}
+                style={{ width: '100%', transform: visible ? 'scaleX(1)' : 'scaleX(0)' }}
+                aria-hidden="true"
+            />
+            <span className="relative px-2">{children}</span>
+        </span>
+    );
+};
+
+const CountUp = ({ value, duration = 1400 }) => {
+    const [ref, visible] = useInView(0.5);
+    const [display, setDisplay] = useState(null);
+    const numericMatch = String(value).match(/[0-9]+/);
+    const numeric = numericMatch ? parseInt(numericMatch[0], 10) : null;
+    const prefix = numericMatch ? String(value).slice(0, numericMatch.index) : '';
+    const suffix = numericMatch ? String(value).slice(numericMatch.index + numericMatch[0].length) : '';
+
     useEffect(() => {
-        function handleKey(e) {
-            if (e.key === 'Escape') onClose()
-            if (e.key === 'ArrowLeft') onStep(-1)
-            if (e.key === 'ArrowRight') onStep(1)
-        }
-        window.addEventListener('keydown', handleKey)
-        return () => window.removeEventListener('keydown', handleKey)
-    }, [onClose, onStep])
+        if (!visible || numeric === null) return;
+        const start = performance.now();
+        let raf;
+        const step = (now) => {
+            const progress = Math.min((now - start) / duration, 1);
+            setDisplay(Math.floor(progress * numeric));
+            if (progress < 1) raf = requestAnimationFrame(step);
+        };
+        raf = requestAnimationFrame(step);
+        return () => cancelAnimationFrame(raf);
+    }, [visible, numeric, duration]);
 
-    if (index === null) return null
-    const item = items[index]
+    if (numeric === null) {
+        return <span ref={ref}>{value}</span>;
+    }
+
+    return <span ref={ref}>{prefix}{display === null ? 0 : display}{suffix}</span>;
+};
+
+const Tape = ({ className = "" }) => (
+    <div className={`absolute w-12 h-4 bg-white/60 backdrop-blur-md shadow-sm opacity-80 z-10 pointer-events-none ${className}`} style={{ mixBlendMode: 'screen' }} />
+);
+
+const StickyNote = ({ text, color, rotation, className = "", floatClass = "", hoverable = true }) => {
+    const colors = {
+        yellow: "bg-[#FFD23F] text-[#14162B]",
+        mint: "bg-[#00B39B] text-white",
+        coral: "bg-[#FF5D5D] text-white",
+        blue: "bg-[#4C6FFF] text-white",
+        white: "bg-white text-[#14162B]"
+    };
 
     return (
         <div
-            className="story-lightbox-overlay fixed inset-0 z-[100] flex items-center justify-center bg-[#030712]/92 p-4 backdrop-blur-md"
+            className={`p-4 shadow-paper flex items-center justify-center text-center font-handwriting text-2xl leading-tight transition-all duration-300 ease-out ${hoverable ? 'hover:rotate-0 hover:scale-[1.04] hover:shadow-2xl hover:-translate-y-1' : ''} ${colors[color]} ${rotation} ${floatClass} ${className}`}
+        >
+            {text}
+        </div>
+    );
+};
+
+const DoodleArrow = ({ className }) => (
+    <svg className={`overflow-visible ${className}`} viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M10,90 Q50,10 90,50" />
+        <path d="M75,35 L90,50 L75,65" />
+    </svg>
+);
+
+const TutorialOverloadDoodle = ({ className = "" }) => (
+    <svg className={className} viewBox="0 0 160 120" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="10" y="10" width="90" height="60" rx="4" transform="rotate(-6 10 10)" opacity="0.5" />
+        <rect x="22" y="24" width="90" height="60" rx="4" transform="rotate(3 22 24)" opacity="0.75" />
+        <rect x="16" y="42" width="90" height="60" rx="4" />
+        <polygon points="52,62 52,92 78,77" fill="currentColor" stroke="none" />
+        <path d="M120,30 Q140,45 122,58" opacity="0.7" />
+        <path d="M130,20 Q150,20 148,38" opacity="0.4" />
+    </svg>
+);
+
+const Lightbox = ({ src, onClose }) => {
+    if (!src) return null;
+    return (
+        <div
+            className="fixed inset-0 z-[100] bg-[#14162B]/90 flex items-center justify-center p-6 cursor-zoom-out"
             onClick={onClose}
             role="dialog"
             aria-modal="true"
-            aria-label={item.title}
         >
             <button
                 onClick={onClose}
-                aria-label="Close"
-                className="absolute right-5 top-5 grid size-11 place-items-center rounded-full border border-white/15 bg-white/5 text-slate-200 transition-colors hover:bg-white/10"
+                aria-label="Close image"
+                className="absolute top-6 right-6 text-white text-4xl leading-none font-black hover:text-[#FFD23F] transition-colors"
             >
-                <X size={20} />
+                &times;
             </button>
-            <button
-                onClick={(e) => { e.stopPropagation(); onStep(-1) }}
-                aria-label="Previous photo"
-                className="absolute left-3 grid size-11 place-items-center rounded-full border border-white/15 bg-white/5 text-slate-200 transition-colors hover:bg-white/10 sm:left-8"
-            >
-                <ChevronLeft size={20} />
-            </button>
-            <button
-                onClick={(e) => { e.stopPropagation(); onStep(1) }}
-                aria-label="Next photo"
-                className="absolute right-3 grid size-11 place-items-center rounded-full border border-white/15 bg-white/5 text-slate-200 transition-colors hover:bg-white/10 sm:right-8"
-            >
-                <ChevronRight size={20} />
-            </button>
-            <figure className="max-w-full" onClick={(e) => e.stopPropagation()}>
-                <img
-                    src={item.image}
-                    alt={item.title}
-                    className="max-h-[78vh] max-w-full rounded-2xl border border-white/10 object-contain shadow-[0_30px_80px_-20px_rgba(0,0,0,.8)]"
-                />
-                <figcaption className="muted mt-3 text-center text-sm">{item.title}</figcaption>
-            </figure>
+            <img
+                src={src}
+                alt="Memory wall enlarged"
+                className="max-h-[85vh] max-w-[90vw] object-contain shadow-2xl cursor-default"
+                onClick={(e) => e.stopPropagation()}
+            />
         </div>
-    )
-}
+    );
+};
 
-// ---------------------------------------------------------------------------
-// Page
-// ---------------------------------------------------------------------------
+// --- MAIN PAGE COMPONENT ---
+const TechHubStory = () => {
+    const [lightboxSrc, setLightboxSrc] = useState(null);
+    const [storyModalData, setStoryModalData] = useState(null); // Story modal state
 
-export default function TechHubStory() {
-    const [lightboxIndex, setLightboxIndex] = useState(null)
-    const heroParallax = useParallax(0.12)
-    const logoParallax = useParallax(0.22)
-    const activeSlide = useActiveSlide()
-
-    function stepLightbox(dir) {
-        setLightboxIndex((i) => {
-            if (i === null) return i
-            const next = (i + dir + galleryPhotos.length) % galleryPhotos.length
-            return next
-        })
-    }
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
-        <div className="min-h-screen bg-[#030712] text-slate-100">
-            {/* Minimal presentation header — brand + a way back, nothing else to
-          compete with the story on a projector. */}
-            <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[.08] bg-[#030712]/80 backdrop-blur-xl animate-[navFade_.6s_cubic-bezier(.16,1,.3,1)_both]">
-                <div className="header-shimmer" />
-                <div className="container flex h-[4.5rem] items-center justify-between">
-                    <Link to="/" className="brand-mark group relative flex items-center gap-3" aria-label="TechHub home">
-                        <span className="brand-badge relative grid place-items-center rounded-xl">
-                            <img
-                                src={techhubLogo}
-                                alt="TechHub Logo"
-                                className="h-11 w-11 object-contain transition-transform duration-500 ease-out group-hover:-rotate-[10deg] group-hover:scale-110"
-                            />
-                        </span>
-                        <span className="font-heading text-lg font-semibold tracking-tight text-slate-100 transition-colors duration-300 group-hover:text-white">
-                            TECH<span className="text-blue-400">'HUB</span>
-                        </span>
-                    </Link>
-                    <Link to="/" className="hidden text-sm text-slate-400 transition-colors hover:text-white sm:block">
-                        &larr; Back to Home
-                    </Link>
-                    <Magnet padding={50} magnetStrength={10}>
+        <div className="min-h-screen bg-paper font-sans text-primary overflow-x-hidden selection:bg-[#4C6FFF] selection:text-white">
+            <style>{styles}</style>
+
+            <Lightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
+
+            {/* Interactive Storytelling Modal */}
+            <StoryModal
+                isOpen={!!storyModalData}
+                onClose={() => setStoryModalData(null)}
+                data={storyModalData}
+            />
+
+            {/* HEADER NAVIGATION */}
+            <nav className="fixed top-0 left-0 right-0 p-6 flex justify-between items-center z-50 bg-paper/80 backdrop-blur-md border-b border-gray-100">
+                <Link to="/" className="text-2xl font-black tracking-tighter text-primary flex items-center gap-2">
+                    <span className="w-8 h-8 bg-[#4C6FFF] text-white rounded-lg flex items-center justify-center text-sm">TH</span>
+                    TechHub
+                </Link>
+                <div className="flex gap-4 items-center">
+                    <Link to="/" className="px-4 py-2 font-semibold text-secondary hover:text-primary transition-colors hidden sm:block">Back to Home</Link>
+                    <a href="#registration-url" className="px-6 py-2 bg-[#14162B] text-white font-semibold rounded-full hover:bg-[#4C6FFF] transition-colors shadow-lg shadow-[#4C6FFF]/20">
+                        Join Orientation
+                    </a>
+                </div>
+            </nav>
+
+            {/* HERO */}
+            <section className="relative min-h-[90vh] flex items-center justify-center px-6 pt-24 bg-grid-pattern pb-20">
+                <svg
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[900px] h-auto text-[#4C6FFF] opacity-[0.06] pointer-events-none"
+                    viewBox="0 0 400 200" fill="none" stroke="currentColor" strokeWidth="3"
+                >
+                    <rect x="30" y="90" width="50" height="50" />
+                    <rect x="90" y="60" width="50" height="80" />
+                    <rect x="150" y="100" width="50" height="40" />
+                    <path d="M55,90 L55,50 M115,60 L115,20 M175,100 L175,70" strokeDasharray="4 6" />
+                    <path d="M220,140 Q260,60 320,110" strokeDasharray="4 6" />
+                    <circle cx="320" cy="110" r="6" fill="currentColor" stroke="none" />
+                </svg>
+
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="pointer-events-auto">
+                        <StickyNote text="Where do I even start?" color="yellow" rotation="-rotate-6" className="absolute top-[20%] left-[10%] max-w-[200px]" floatClass="animate-float-1" />
+                    </div>
+                    <div className="pointer-events-auto">
+                        <StickyNote text="Too many tutorials 😭" color="white" rotation="rotate-3" className="absolute top-[30%] right-[10%] max-w-[180px] scale-90" floatClass="animate-float-2" />
+                    </div>
+                    <div className="pointer-events-auto">
+                        <StickyNote text="CGPA panic." color="coral" rotation="rotate-6" className="absolute bottom-[20%] right-[20%] max-w-[140px] scale-95" floatClass="animate-float-1" />
+                    </div>
+                </div>
+
+                <div className="relative z-10 max-w-4xl mx-auto text-center mt-12">
+                    <h1 className="text-6xl md:text-8xl font-black tracking-tight leading-[1.1] mb-8 text-primary">
+                        We Built The Community <br />
+                        <span className="text-[#4C6FFF] inline-block mt-2">We Wish We Had.</span>
+                    </h1>
+                    <p className="text-2xl md:text-3xl text-secondary max-w-3xl mx-auto leading-relaxed font-medium mb-12">
+                        TechHub started with a simple observation: students were learning technologies alone when they should have been <span className="highlight-blue font-bold text-primary">building together.</span>
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
                         <a
-                            href={REGISTRATION_LINK}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-shine relative inline-flex min-h-11 items-center justify-center gap-2 overflow-hidden rounded-xl bg-blue-500 px-4 text-sm font-semibold text-white shadow-[0_12px_30px_-12px_rgba(59,130,246,.9)] transition-all duration-300 hover:scale-[1.03] hover:bg-blue-400"
+                            href="#why"
+                            className="px-8 py-4 bg-[#14162B] text-white text-lg font-bold rounded-full hover:bg-[#4C6FFF] transition-all hover:scale-105 shadow-xl shadow-[#4C6FFF]/20 w-full sm:w-auto"
                         >
-                            Join Orientation <ArrowRight size={15} />
+                            Explore Our Story ↓
                         </a>
-                    </Magnet>
-                </div>
-            </header>
-
-            {/* Numbered dot rail — the "remote clicker" for the talk. */}
-            <SlideRail activeId={activeSlide} />
-
-            <main>
-                {/* -------------------------------------------------------------- */}
-                {/* 1. HERO                                                         */}
-                {/* -------------------------------------------------------------- */}
-                <section id="hero" className="section relative isolate flex min-h-[100dvh] items-center overflow-hidden pt-28">
-                    <div ref={heroParallax} className="absolute inset-0 -z-10">
-                        <Aurora colorStops={['#7cff67', '#B497CF', '#5227FF']} amplitude={0.9} blend={0.4} speed={0.25} />
-                    </div>
-                    <div className="grid-bg absolute inset-0 -z-10 opacity-40" />
-                    <div
-                        className="pointer-events-none absolute inset-0 -z-10"
-                        style={{
-                            WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 40%, #000 35%, transparent 85%)',
-                            maskImage: 'radial-gradient(ellipse 70% 70% at 50% 40%, #000 35%, transparent 85%)',
-                        }}
-                    >
-                        <DotField dotRadius={1.5} dotSpacing={18} bulgeStrength={40} glowRadius={160} sparkle waveAmplitude={5} />
-                    </div>
-
-                    <div className="container relative z-10 text-center">
-                        <Reveal className="[animation-delay:.05s]">
-                            <div className="mb-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
-                                <Link to="/" className="inline-flex items-center gap-1.5 font-semibold text-slate-400 transition-colors hover:text-white">
-                                    &larr; Back to Home
-                                </Link>
-                                <Link to="/roadmaps" className="inline-flex items-center gap-1.5 font-semibold text-blue-300 transition-colors hover:text-blue-200">
-                                    Open B.Tech Survival Guide <ArrowRight size={15} />
-                                </Link>
-                            </div>
-                        </Reveal>
-                        <Reveal className="[animation-delay:.15s]">
-                            <div ref={logoParallax} className="story-float mx-auto mb-8 grid size-20 place-items-center rounded-3xl border border-white/10 bg-white/[.03] backdrop-blur-sm sm:size-24">
-                                <img src={techhubLogo} alt="TechHub logo" className="h-12 w-12 object-contain sm:h-14 sm:w-14" />
-                            </div>
-                        </Reveal>
-
-                        <Reveal className="[animation-delay:.3s]">
-                            <div className="eyebrow mb-5 justify-center gap-2 sm:flex">Our Story &middot; Orientation Edition</div>
-                        </Reveal>
-
-                        <Reveal className="[animation-delay:.45s]">
-                            <h1 className="mx-auto max-w-5xl text-5xl font-semibold leading-[1.02] tracking-[-.05em] text-white sm:text-7xl lg:text-8xl">
-                                We Built The Community <span className="text-blue-400">We Wish We Had</span>
-                            </h1>
-                        </Reveal>
-
-                        <Reveal className="[animation-delay:.6s]">
-                            <p className="muted mx-auto mt-8 max-w-xl text-base leading-7 sm:text-lg">
-                                TechHub started with a simple observation: students were learning technologies alone
-                                when they should have been building together.
-                            </p>
-                        </Reveal>
-
-                        <Reveal className="[animation-delay:.75s]">
-                            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                                <button
-                                    onClick={() => scrollToSection('problem')}
-                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-950/30 px-6 text-sm font-semibold text-slate-200 transition-all hover:border-blue-400/70 hover:bg-slate-900"
-                                >
-                                    Explore Our Story <ArrowDown size={16} />
-                                </button>
-                                <Magnet padding={60} magnetStrength={8}>
-                                    <a
-                                        href={REGISTRATION_LINK}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn-shine relative inline-flex min-h-12 items-center justify-center gap-2 overflow-hidden rounded-xl bg-blue-500 px-6 text-sm font-semibold text-white shadow-[0_12px_30px_-12px_rgba(59,130,246,.9)] transition-all duration-300 hover:scale-[1.03] hover:bg-blue-400"
-                                    >
-                                        Join Orientation <ArrowRight size={16} />
-                                    </a>
-                                </Magnet>
-                            </div>
-                        </Reveal>
-
-                        <Reveal className="[animation-delay:.9s]">
-                            <div className="mx-auto mt-16 grid max-w-2xl grid-cols-3 divide-x divide-white/[.07] border-y border-white/[.07] py-6">
-                                {heroStats.map((s) => (
-                                    <div key={s.label} className="px-3 text-center">
-                                        <div className="bg-gradient-to-b from-white to-slate-300 bg-clip-text font-heading text-2xl font-semibold text-transparent sm:text-3xl">
-                                            <CountUp from={0} to={s.value} duration={2} />{s.suffix}
-                                        </div>
-                                        <div className="mt-1.5 text-[11px] uppercase tracking-wider text-slate-500 sm:text-xs">{s.label}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </Reveal>
-                    </div>
-                </section>
-
-                {/* -------------------------------------------------------------- */}
-                {/* 2. THE PROBLEM                                                  */}
-                {/* -------------------------------------------------------------- */}
-                <Slide id="problem" className="border-y border-white/[.07] bg-slate-950/30">
-                    <div className="ambient-blobs"><span className="blob blob-blue blob-1" /><span className="blob blob-violet blob-2" /></div>
-                    <SectionTitle id="problem" eyebrow="The gap we saw" title="Learning alone doesn't build careers." />
-                    <div className="grid items-stretch gap-6 lg:grid-cols-[1fr_auto_1fr]">
-                        <ScrollReveal delay={0}>
-                            <SpotlightCard className="surface h-full rounded-2xl p-6 sm:p-8" spotlightColor="rgba(148,163,184,0.08)">
-                                <span className="eyebrow mb-6 inline-block !text-slate-400">Before</span>
-                                <ComparisonList items={problemBefore} tone="before" />
-                            </SpotlightCard>
-                        </ScrollReveal>
-
-                        <div className="hidden items-center justify-center lg:flex">
-                            <span className="story-arrow-nudge grid size-12 place-items-center rounded-full border border-blue-400/30 bg-blue-500/10 text-blue-300">
-                                <ArrowRight size={20} />
-                            </span>
-                        </div>
-
-                        <ScrollReveal delay={140}>
-                            <SpotlightCard
-                                className="surface surface-elevated h-full rounded-2xl p-6 sm:p-8"
-                                spotlightColor="rgba(16,185,129,0.14)"
-                                style={{ backgroundColor: 'rgba(15, 23, 42, 0.55)' }}
-                            >
-                                <span className="eyebrow mb-6 inline-block !text-emerald-300">After TechHub</span>
-                                <ComparisonList items={problemAfter} tone="after" />
-                            </SpotlightCard>
-                        </ScrollReveal>
-                    </div>
-                </Slide>
-
-                {/* -------------------------------------------------------------- */}
-                {/* 3. THE REALIZATION                                              */}
-                {/* -------------------------------------------------------------- */}
-                <Slide id="realization" className="section-fade-top">
-                    <div className="ambient-blobs"><span className="blob blob-violet blob-3" /></div>
-                    <div className="mx-auto max-w-4xl text-center">
-                        <SlideNumber id="realization" />
-                        <div className="eyebrow mb-8 justify-center gap-2 sm:flex">So we asked a question</div>
-                        <Quote size={30} className="mx-auto mb-8 rotate-180 text-blue-400/50" />
-                        <ScrollReveal>
-                            <p className="font-heading text-4xl font-medium leading-tight tracking-[-.03em] text-white sm:text-6xl lg:text-7xl">
-                                &ldquo;{realizationLine}&rdquo;
-                            </p>
-                        </ScrollReveal>
-                        <ScrollReveal delay={150}>
-                            <p className="muted mx-auto mt-9 max-w-lg text-base leading-7 sm:text-lg">
-                                That single question, asked in a hallway between classes, is where TechHub actually began.
-                            </p>
-                        </ScrollReveal>
-                    </div>
-                </Slide>
-
-                {/* -------------------------------------------------------------- */}
-                {/* 4. THE BEGINNING                                                */}
-                {/* -------------------------------------------------------------- */}
-                <Slide id="beginning" className="border-y border-white/[.07] bg-slate-950/25">
-                    <div className="ambient-blobs"><span className="blob blob-blue blob-2" /></div>
-                    <SectionTitle id="beginning" eyebrow="The beginning" title="That's how TechHub started." />
-                    <div className="relative mx-auto max-w-3xl">
-                        <div className="absolute left-[15px] top-2 bottom-2 hidden w-px bg-gradient-to-b from-blue-400/50 via-violet-400/40 to-transparent sm:block" />
-                        <div className="space-y-12">
-                            {originStory.map((beat, i) => (
-                                <ScrollReveal key={beat.tag} delay={i * 100}>
-                                    <div className="relative pl-0 sm:pl-12">
-                                        <span className="absolute left-0 top-1 hidden size-8 place-items-center rounded-full border border-blue-400/40 bg-[#030712] font-mono text-[11px] text-blue-300 sm:grid">
-                                            {i + 1}
-                                        </span>
-                                        <div className="eyebrow mb-2">{beat.tag}</div>
-                                        <h3 className="font-heading text-2xl font-semibold text-white sm:text-3xl">{beat.title}</h3>
-                                        <p className="muted mt-3 max-w-xl text-base leading-7">{beat.text}</p>
-                                    </div>
-                                </ScrollReveal>
-                            ))}
-                        </div>
-                    </div>
-                </Slide>
-
-                {/* -------------------------------------------------------------- */}
-                {/* 5. FIRST STEPS                                                  */}
-                {/* -------------------------------------------------------------- */}
-                <Slide id="first-steps" className="section-fade-top">
-                    <div className="ambient-blobs"><span className="blob blob-blue blob-3" /></div>
-                    <SectionTitle
-                        id="first-steps"
-                        eyebrow="First steps"
-                        title="One idea. One team. One mission."
-                        text="No department budget, no head start — just the people who showed up first."
-                    />
-
-                    <ScrollReveal>
-                        <SpotlightCard className="surface surface-elevated mx-auto mb-14 max-w-3xl overflow-hidden rounded-2xl p-0" spotlightColor="rgba(59,130,246,0.14)">
-                            <div className="grid gap-0 sm:grid-cols-[240px_1fr]">
-                                <div className="aspect-square sm:aspect-auto">
-                                    <img src={founder.photo} alt={founder.name} loading="lazy" className="size-full object-cover" />
-                                </div>
-                                <div className="flex flex-col justify-center p-7 sm:p-9">
-                                    <span className="eyebrow mb-3 inline-block">{founder.role}</span>
-                                    <p className="font-heading text-xl font-medium leading-8 text-white sm:text-2xl">
-                                        &ldquo;{founder.quote}&rdquo;
-                                    </p>
-                                    <div className="mt-5 text-sm font-semibold text-slate-300">{founder.name}</div>
-                                </div>
-                            </div>
-                        </SpotlightCard>
-                    </ScrollReveal>
-
-                    <div className="mx-auto flex max-w-3xl flex-wrap items-start justify-center gap-x-6 gap-y-10 sm:gap-x-10">
-                        {earlyTeam.map((m, i) => (
-                            <ScrollReveal key={m.name} delay={i * 80}>
-                                <div
-                                    className={`w-32 shrink-0 rounded-lg border-4 border-white bg-white p-2 pb-4 shadow-[0_20px_45px_-18px_rgba(0,0,0,.6)] transition-transform duration-300 hover:rotate-0 hover:scale-105 sm:w-36 ${polaroidTilts[i % polaroidTilts.length]}`}
-                                >
-                                    <div className="aspect-square overflow-hidden">
-                                        <img src={m.photo} alt={m.name} loading="lazy" className="size-full object-cover" />
-                                    </div>
-                                    <div className="mt-2 text-center font-heading text-[11px] font-semibold leading-tight text-slate-900">{m.name}</div>
-                                    <div className="mt-0.5 text-center text-[10px] text-slate-500">{m.role}</div>
-                                </div>
-                            </ScrollReveal>
-                        ))}
-                    </div>
-                </Slide>
-
-                {/* -------------------------------------------------------------- */}
-                {/* 6. GROWTH                                                       */}
-                {/* -------------------------------------------------------------- */}
-                <Slide id="growth" className="border-y border-white/[.07] bg-slate-950/30">
-                    <div className="ambient-blobs"><span className="blob blob-blue blob-1" /><span className="blob blob-violet blob-3" /></div>
-                    <SectionTitle id="growth" eyebrow="Growth" title="Then things started growing." />
-
-                    <ScrollReveal>
-                        <div className="mx-auto mb-16 grid max-w-2xl grid-cols-3 divide-x divide-white/[.07] border-y border-white/[.07] py-6">
-                            {heroStats.map((s) => (
-                                <div key={s.label} className="px-3 text-center">
-                                    <div className="bg-gradient-to-b from-white to-slate-300 bg-clip-text font-heading text-3xl font-semibold text-transparent sm:text-4xl">
-                                        <CountUp from={0} to={s.value} duration={2} />{s.suffix}
-                                    </div>
-                                    <div className="mt-1.5 text-[11px] uppercase tracking-wider text-slate-500 sm:text-xs">{s.label}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </ScrollReveal>
-
-                    <div className="story-timeline-track relative h-px w-full" />
-                    <div className="-mt-px grid gap-x-4 gap-y-12 sm:grid-cols-3 lg:grid-cols-6">
-                        {milestones.map((m, i) => (
-                            <ScrollReveal key={m.title} delay={i * 90}>
-                                <div className="story-timeline-node text-center">
-                                    <span className="story-timeline-dot relative mx-auto -mt-[7px] mb-5 grid size-3.5 place-items-center rounded-full bg-blue-400" />
-                                    <span className="mx-auto grid size-12 place-items-center rounded-xl bg-blue-500/10 text-blue-300">
-                                        <m.icon size={20} />
-                                    </span>
-                                    <div className="mt-4 font-mono text-xs text-blue-300">{m.year}</div>
-                                    <h3 className="mt-1 font-heading text-sm font-semibold text-white">{m.title}</h3>
-                                    <p className="muted mt-2 text-xs leading-5">{m.desc}</p>
-                                </div>
-                            </ScrollReveal>
-                        ))}
-                    </div>
-                </Slide>
-
-                {/* -------------------------------------------------------------- */}
-                {/* 7. HALL OF FAME                                                 */}
-                {/* -------------------------------------------------------------- */}
-                <Slide id="hall-of-fame" className="section-fade-top">
-                    <div className="ambient-blobs"><span className="blob blob-emerald blob-2" /></div>
-                    <SectionTitle
-                        id="hall-of-fame"
-                        eyebrow="Hall of fame"
-                        title="Every senior was once a fresher."
-                        text="These are the people who showed up, kept building, and turned TechHub into a launchpad."
-                    />
-                    <HallOfFameSpotlight items={hallOfFame} />
-                </Slide>
-
-                {/* -------------------------------------------------------------- */}
-                {/* 8. WHAT MAKES TECHHUB DIFFERENT                                 */}
-                {/* -------------------------------------------------------------- */}
-                <Slide id="different" className="border-y border-white/[.07] bg-slate-950/30">
-                    <SectionTitle id="different" eyebrow="What makes TechHub different" title="Build first. Understand as you go." />
-                    <div className="mx-auto grid max-w-4xl gap-12 sm:grid-cols-2 sm:gap-0 sm:divide-x sm:divide-white/10">
-                        <ScrollReveal delay={0}>
-                            <div className="sm:pr-12">
-                                <div className="mb-8 flex items-center gap-3 text-slate-400">
-                                    <Layers size={22} />
-                                    <h3 className="font-heading text-base font-semibold uppercase tracking-widest">Traditional Path</h3>
-                                </div>
-                                <ul className="space-y-6">
-                                    {traditionalApproach.map((t) => (
-                                        <li key={t} className="text-lg leading-8 text-slate-500 decoration-slate-600 sm:text-xl">
-                                            <span className="line-through decoration-2">{t}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </ScrollReveal>
-                        <ScrollReveal delay={120}>
-                            <div className="sm:pl-12">
-                                <div className="mb-8 flex items-center gap-3 text-blue-300">
-                                    <Rocket size={22} />
-                                    <h3 className="font-heading text-base font-semibold uppercase tracking-widest text-white">TechHub Path</h3>
-                                </div>
-                                <ul className="space-y-6">
-                                    {techhubApproach.map((t) => (
-                                        <li key={t} className="text-lg leading-8 text-slate-100 sm:text-xl">{t}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </ScrollReveal>
-                    </div>
-                </Slide>
-
-                {/* -------------------------------------------------------------- */}
-                {/* 9. GALLERY OF MEMORIES                                          */}
-                {/* -------------------------------------------------------------- */}
-                <Slide id="gallery" className="section-fade-top">
-                    <SectionTitle id="gallery" eyebrow="Gallery of memories" title="Workshops, events, and everything between." />
-                    <div className="story-masonry">
-                        {galleryPhotos.map((item, i) => (
-                            <button
-                                key={i}
-                                onClick={() => setLightboxIndex(i)}
-                                className="group relative block w-full overflow-hidden rounded-2xl border border-white/10"
-                                style={{ aspectRatio: i % 3 === 0 ? '4 / 5' : i % 3 === 1 ? '1 / 1' : '4 / 3' }}
-                                aria-label={`Open photo: ${item.title}`}
-                            >
-                                <img
-                                    src={item.image}
-                                    alt={item.title}
-                                    loading="lazy"
-                                    className="size-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                />
-                                <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-black/0 to-black/0 p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                    <span className="text-sm font-medium text-white">{item.title}</span>
-                                </div>
-                            </button>
-                        ))}
-                    </div>
-                </Slide>
-
-                <GalleryLightbox
-                    items={galleryPhotos}
-                    index={lightboxIndex}
-                    onClose={() => setLightboxIndex(null)}
-                    onStep={stepLightbox}
-                />
-
-                {/* -------------------------------------------------------------- */}
-                {/* 10. VISION 2030                                                 */}
-                {/* -------------------------------------------------------------- */}
-                <Slide id="vision" className="border-t border-white/[.07]">
-                    <div className="ambient-blobs"><span className="blob blob-blue blob-2" /><span className="blob blob-violet blob-1" /></div>
-                    <SectionTitle id="vision" eyebrow="Vision 2030" title="This is only the beginning." />
-                    <div className="bento-grid mx-auto grid max-w-4xl gap-5 sm:grid-cols-2">
-                        {visionCards.map((v, i) => (
-                            <ScrollReveal key={v.title} delay={i * 70}>
-                                <SpotlightCard className="surface bento-card group h-full rounded-2xl p-7" spotlightColor="rgba(139,92,246,0.14)">
-                                    <span className="grid size-13 place-items-center rounded-xl bg-violet-500/10 text-violet-300">
-                                        <v.icon size={24} />
-                                    </span>
-                                    <h3 className="mt-6 font-heading text-xl font-semibold text-white">{v.title}</h3>
-                                    <p className="muted mt-2 text-base leading-7">{v.text}</p>
-                                </SpotlightCard>
-                            </ScrollReveal>
-                        ))}
-                    </div>
-                </Slide>
-
-                {/* -------------------------------------------------------------- */}
-                {/* 11. FINAL CTA                                                   */}
-                {/* -------------------------------------------------------------- */}
-                <section id="final" className="section relative isolate flex min-h-[100dvh] items-center justify-center overflow-hidden">
-                    <div className="absolute inset-0 -z-10">
-                        <Aurora colorStops={['#5227FF', '#B497CF', '#7cff67']} amplitude={0.6} blend={0.45} speed={0.2} />
-                    </div>
-                    <div className="absolute inset-0 -z-10 bg-[#030712]/60" />
-                    <div className="container relative z-10 text-center">
-                        <ScrollReveal>
-                            <SlideNumber id="final" />
-                            <MessagesSquare size={32} className="mx-auto mb-6 text-blue-300" />
-                            <h2 className="mx-auto max-w-4xl text-5xl font-semibold leading-[1.05] tracking-[-.04em] text-white sm:text-7xl">
-                                The Next Chapter <span className="text-blue-400">Starts With You</span>
-                            </h2>
-                            <p className="muted mx-auto mt-7 max-w-lg text-base leading-7 sm:text-lg">
-                                Every senior was once a fresher. Every builder started somewhere.
-                                <br className="hidden sm:block" />
-                                Maybe your story starts here too.
-                            </p>
-                            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                                <Magnet padding={60} magnetStrength={8}>
-                                    <a
-                                        href={REGISTRATION_LINK}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn-shine relative inline-flex min-h-12 items-center justify-center gap-2 overflow-hidden rounded-xl bg-blue-500 px-6 text-sm font-semibold text-white shadow-[0_12px_30px_-12px_rgba(59,130,246,.9)] transition-all duration-300 hover:scale-[1.03] hover:bg-blue-400"
-                                    >
-                                        Join Orientation <ArrowRight size={16} />
-                                    </a>
-                                </Magnet>
-                                <Magnet padding={60} magnetStrength={8}>
-                                    <a
-                                        href={WHATSAPP_LINK}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-950/30 px-6 text-sm font-semibold text-slate-200 transition-all hover:border-blue-400/70 hover:bg-slate-900"
-                                    >
-                                        Join WhatsApp Community <ArrowUpRight size={16} />
-                                    </a>
-                                </Magnet>
-                            </div>
-                        </ScrollReveal>
-                    </div>
-                </section>
-            </main>
-
-            <footer className="border-t border-white/[.08] py-10">
-                <div className="container flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <Link to="/" className="font-heading text-lg font-semibold">
-                            TECH<span className="text-blue-400">'HUB</span>
+                        <Link
+                            to="/roadmaps"
+                            className="px-8 py-4 bg-white border-2 border-gray-200 text-primary text-lg font-bold rounded-full hover:border-[#00B39B] hover:text-[#00B39B] transition-colors w-full sm:w-auto"
+                        >
+                            Open B.Tech Survival Guide →
                         </Link>
-                        <p className="muted mt-2 text-sm">Build beyond the classroom.</p>
                     </div>
-                    <Link to="/" className="text-sm text-slate-400 transition-colors hover:text-white">
-                        &larr; Back to Home
-                    </Link>
                 </div>
-            </footer>
+            </section>
+
+            {/* 1. WHY TECHHUB EXISTED */}
+            <section id="why" className="py-32 px-6 bg-cream relative overflow-hidden border-t border-gray-200">
+                <div className="max-w-6xl mx-auto relative flex flex-col md:flex-row items-center justify-between gap-16">
+                    <Reveal className="w-full md:w-5/12 relative">
+                        <div className="absolute -top-12 -left-12 font-handwriting text-4xl text-secondary rotate-[-10deg]">The Gap</div>
+                        <h2 className="text-5xl md:text-6xl font-black mb-8 leading-tight">Learning Alone Doesn't Build Careers.</h2>
+
+                        <div className="relative h-[300px] w-full mt-12">
+                            <div className="absolute top-0 left-0 bg-white p-6 shadow-md border border-gray-200 rotate-[-4deg] w-64 z-10">
+                                <Tape className="top-[-8px] left-10 rotate-3" />
+                                <p className="font-mono text-sm text-gray-500 mb-2">Error: Module not found</p>
+                                <div className="h-2 bg-red-100 rounded w-full mb-2"></div>
+                                <div className="h-2 bg-red-100 rounded w-3/4"></div>
+                            </div>
+                            <StickyNote text="Python installation entered boss fight." color="yellow" rotation="rotate-6" className="absolute top-20 left-32 z-20 max-w-[220px]" />
+                            <TutorialOverloadDoodle className="absolute bottom-0 right-0 w-24 h-24 text-secondary opacity-70" />
+                        </div>
+                    </Reveal>
+
+                    <div className="hidden md:block w-2/12 relative">
+                        <div className="font-handwriting text-lg text-[#7C5CFF] absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rotate-[-4deg]">CHAOS</div>
+                        <DoodleArrow className="w-32 h-32 text-[#7C5CFF]" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-handwriting text-3xl text-[#7C5CFF] whitespace-nowrap mt-16 -rotate-6">
+                            What we wanted instead
+                        </div>
+                    </div>
+
+                    <Reveal delay={150} className="w-full md:w-5/12 relative flex flex-wrap gap-5 justify-center md:justify-start items-start">
+                        {gapIdeas.map((item, i) => (
+                            <StoryTrigger
+                                key={i}
+                                onClick={() => setStoryModalData(item)}
+                                baseRotation={item.rotation}
+                                className="block relative focus-visible:outline-none"
+                            >
+                                <div className={`relative px-6 py-4 shadow-paper border border-gray-100 font-bold text-xl ${item.colorClass}`}>
+                                    <Tape className="top-[-8px] left-1/2 -translate-x-1/2 rotate-2 w-16" />
+                                    {item.title}
+                                </div>
+                            </StoryTrigger>
+                        ))}
+                    </Reveal>
+                </div>
+            </section>
+
+            {/* 2. THE IDEA */}
+            <section id="idea" className="py-40 px-6 flex flex-col justify-center items-center text-center bg-paper relative">
+                <div className="max-w-5xl relative z-10 mb-20">
+                    <div className="absolute -top-16 left-0 font-handwriting text-4xl text-[#FF5D5D] -rotate-6">
+                        The Realization
+                        <svg className="w-16 h-16 absolute top-full left-1/2 -translate-x-1/2 text-[#FF5D5D]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="4">
+                            <path d="M50,10 L50,80 M30,60 L50,80 L70,60" />
+                        </svg>
+                    </div>
+                    <h2 className="text-6xl md:text-8xl font-black leading-tight tracking-tighter">
+                        What if students <br />
+                        didn't have to <br />
+                        <AnimatedHighlight><span className="text-[#14162B]">learn alone?</span></AnimatedHighlight>
+                    </h2>
+                    <p className="font-handwriting text-3xl text-secondary mt-10 rotate-[-1deg]">That was the whole idea.</p>
+                </div>
+
+                <Reveal delay={200} className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 relative z-10 scale-95 opacity-90">
+                    <div className="bg-white p-7 max-w-sm shadow-paper rotate-[-2deg] border border-gray-100 relative text-left">
+                        <Tape className="top-[-8px] right-8 rotate-3" />
+                        <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-3">The Question</h3>
+                        <p className="text-xl font-semibold leading-snug">How do we bridge the gap between college theory and the actual industry?</p>
+                    </div>
+                    <div className="bg-[#F4F2EB] p-7 max-w-sm shadow-sm border-l-4 border-[#14162B] rotate-[1deg] text-left">
+                        <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-3">The Decision</h3>
+                        <p className="text-xl font-medium font-serif italic text-secondary">
+                            Create a space where seniors mentor juniors, and we build live projects together.
+                        </p>
+                    </div>
+                </Reveal>
+            </section>
+
+            {/* 3. ONE IDEA. ONE TEAM. ONE MISSION. */}
+            <section id="team" className="py-32 px-6 bg-grid-pattern border-y border-gray-100 overflow-hidden">
+                <div className="max-w-6xl mx-auto flex flex-col items-center">
+                    <Reveal className="text-center mb-16">
+                        <h2 className="text-5xl md:text-7xl font-black tracking-tight mb-6">One Idea.<br />One Team.<br />One Mission.</h2>
+                        <p className="text-2xl text-secondary max-w-2xl mx-auto">It started with a founder's vision and a core team who believed in it enough to build the foundation.</p>
+                    </Reveal>
+
+                    <Reveal delay={150} className="relative w-full max-w-4xl min-h-[460px] flex items-center justify-center py-10">
+                        <svg className="absolute inset-0 w-full h-full text-gray-300" viewBox="0 0 800 460" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="7 9" preserveAspectRatio="xMidYMid meet">
+                            <path d="M400,230 C320,150 200,100 150,70" />
+                            <path d="M400,230 C300,280 200,340 160,370" />
+                            <path d="M400,230 C280,230 160,210 80,220" />
+                            <path d="M400,230 C480,150 600,100 650,70" />
+                            <path d="M400,230 C500,280 600,340 640,370" />
+                            <path d="M400,230 C520,230 640,210 720,220" />
+                        </svg>
+
+                        <div className="z-10 text-center bg-white p-8 rounded-full shadow-xl border-4 border-[#4C6FFF] rotate-[-2deg] transition-transform duration-300 hover:rotate-0 hover:scale-105">
+                            <h3 className="text-4xl font-black text-primary mb-1">Lallu</h3>
+                            <span className="bg-[#FFD23F] px-4 py-1 font-bold text-sm uppercase tracking-wider rounded-full">Founder</span>
+                            <div className="font-handwriting text-lg text-secondary mt-2 -rotate-1">Day 1</div>
+                        </div>
+
+                        <StickyNote text="Aparajita" color="white" rotation="rotate-[6deg]" className="absolute top-6 left-[18%] md:left-[12%] z-20 font-bold !text-xl px-6 py-2" />
+                        <div className="absolute top-0 left-[24%] font-handwriting text-lg text-secondary rotate-[-6deg] z-20 hidden md:block">First team</div>
+
+                        <StickyNote text="Arvind" color="white" rotation="rotate-[-4deg]" className="absolute bottom-12 left-[15%] md:left-[18%] z-20 font-bold !text-xl px-6 py-2" />
+
+                        <StickyNote text="Rashmi" color="white" rotation="rotate-[5deg]" className="absolute top-1/2 -translate-y-1/2 left-[5%] md:left-[8%] z-20 font-bold !text-xl px-6 py-2" />
+
+                        <StickyNote text="Akankshya" color="white" rotation="rotate-[3deg]" className="absolute top-10 right-[18%] md:right-[15%] z-20 font-bold !text-xl px-6 py-2" />
+                        <div className="absolute top-4 right-[25%] font-handwriting text-lg text-secondary rotate-[6deg] z-20 hidden md:block">Built from scratch</div>
+
+                        <StickyNote text="Rashmita" color="white" rotation="rotate-[-5deg]" className="absolute bottom-12 right-[15%] md:right-[18%] z-20 font-bold !text-xl px-6 py-2" />
+
+                        <StickyNote text="Kanhu" color="white" rotation="rotate-[8deg]" className="absolute top-1/2 -translate-y-1/2 right-[5%] md:right-[8%] z-20 font-bold !text-xl px-6 py-2" />
+
+                        <div className="absolute top-[-10px] right-1/2 translate-x-[40%] font-handwriting text-3xl text-[#00B39B] rotate-[-12deg]">The Original Squad!</div>
+                    </Reveal>
+                </div>
+            </section>
+
+            {/* 4. HOW TECHHUB GREW */}
+            <section id="grow" className="py-32 px-6 bg-white overflow-hidden relative border-b border-gray-100">
+                <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-[#4C6FFF]/10 to-transparent rounded-full blur-3xl"></div>
+                <div className="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row justify-between items-start gap-16">
+                    {growthStats.map((stat, i) => (
+                        <Reveal key={i} delay={i * 150} className="text-center flex-1">
+                            <div className="text-[8rem] md:text-[10rem] font-black leading-none tracking-tighter" style={{ color: stat.color }}>
+                                <CountUp value={stat.value} />
+                            </div>
+                            <div className="text-2xl md:text-3xl font-bold font-handwriting text-secondary -mt-4 rotate-[-1deg]">{stat.label}</div>
+                            <p className="text-secondary font-medium mt-3 max-w-[220px] mx-auto">{stat.caption}</p>
+                        </Reveal>
+                    ))}
+                </div>
+            </section>
+
+            {/* 5. FROM TECHHUB TO THE INDUSTRY */}
+            <section id="industry" className="py-32 px-6 bg-cream border-y border-gray-200 relative overflow-hidden">
+                <div className="max-w-7xl mx-auto relative z-10">
+                    <Reveal className="text-center mb-20 md:mb-28 lg:mb-32">
+                        <h2 className="text-5xl md:text-7xl font-black tracking-tight mb-6">From TechHub<br />To The Industry</h2>
+                        <p className="text-2xl text-secondary max-w-2xl mx-auto">Different paths. Different companies. One community that helped them get there.</p>
+                    </Reveal>
+
+                    <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:grid-rows-3 gap-10 md:gap-12 lg:gap-x-4 lg:gap-y-10 xl:gap-x-8 xl:gap-y-12 items-center">
+                        {superSeniors.map((person, index) => {
+                            if (person.role === 'Founder') {
+                                return (
+                                    <div key={index} className={person.wrapperClass}>
+                                        <div className={person.cardClass}>
+                                            <Tape className={person.tapeClass} />
+                                            <div className="absolute -top-6 -right-6 bg-[#7C5CFF] text-white text-xs font-black uppercase px-4 py-2 tracking-widest shadow-lg rotate-12">{person.role}</div>
+                                            <img src={person.photo} alt={person.name} className={person.imgClass} />
+                                            <div className="text-center">
+                                                <h3 className="text-3xl font-black text-primary mb-1">{person.name}</h3>
+                                                <p className="text-lg font-bold text-secondary mb-3">{person.role}</p>
+                                                <div className="inline-block bg-[#14162B] text-white px-4 py-2 rounded font-mono text-sm shadow-sm transition-all duration-300 group-hover:bg-[#4C6FFF] group-hover:px-6">
+                                                    {person.company} {person.designation ? `• ${person.designation}` : ''}
+                                                </div>
+                                                <div className="font-handwriting text-lg text-[#7C5CFF] mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Started it all.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            }
+
+                            return (
+                                <div key={index} className={person.wrapperClass}>
+                                    <div className={person.cardClass}>
+                                        <Tape className={person.tapeClass} />
+                                        <img src={person.photo} alt={person.name} className={person.imgClass} />
+                                        <div>
+                                            <h3 className="text-2xl font-black text-primary">{person.name}</h3>
+                                            <div className="text-sm font-semibold text-gray-500 mb-2">{person.role}</div>
+                                            <div className={`${person.textClass} font-bold text-sm transition-all duration-300 group-hover:text-base`}>
+                                                {person.company} {person.designation ? `• ${person.designation}` : ''}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+
+            {/* 6. THE MEMORY WALL */}
+            <section id="gallery" className="py-32 px-6 bg-grid-pattern overflow-hidden border-t border-gray-200">
+                <div className="max-w-7xl mx-auto">
+                    <Reveal className="text-center mb-16 md:mb-24">
+                        <h2 className="text-5xl md:text-7xl font-black text-primary mb-6">The Memory Wall</h2>
+                        <p className="text-xl md:text-2xl text-secondary font-medium max-w-2xl mx-auto">
+                            Some moments don't belong in a report. They belong on the wall.
+                        </p>
+                    </Reveal>
+
+                    <div className="relative w-full">
+                        {/* Decorative background tape/paper elements */}
+                        <div className="absolute top-[10%] right-[5%] w-24 h-8 bg-[#FFD23F]/20 -rotate-12 blur-sm hidden lg:block rounded-sm"></div>
+                        <div className="absolute bottom-[20%] left-[2%] w-32 h-10 bg-[#00B39B]/10 rotate-6 blur-md hidden lg:block rounded-sm"></div>
+
+                        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-8 md:gap-6 lg:gap-4 xl:gap-8 items-center">
+                            {galleryImages.map((image, index) => (
+                                <Reveal key={index} delay={image.delay} className={image.wrapperClass}>
+                                    <div className="relative group w-full max-w-[320px] sm:max-w-sm lg:max-w-none mx-auto">
+                                        <button
+                                            type="button"
+                                            onClick={() => setLightboxSrc(image.src)}
+                                            className={`block w-full bg-white p-3 lg:p-4 shadow-polaroid border border-gray-100 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] hover:rotate-0 hover:scale-[1.05] hover:shadow-[0_25px_50px_-12px_rgba(20,22,43,0.25)] hover:z-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#4C6FFF] ${image.rotation} z-30 relative`}
+                                            aria-label={image.caption ? `View memory: ${image.caption}` : "View memory"}
+                                        >
+                                            <Tape className={image.tapeClass} />
+                                            <img src={image.src} alt={image.caption || "Memory wall snapshot"} className={`${image.imgClass} bg-gray-100 filter transition-all duration-500 group-hover:brightness-105`} loading="lazy" />
+                                            {image.caption && (
+                                                <div className="mt-4 mb-2 text-center font-handwriting text-2xl md:text-3xl text-secondary group-hover:text-primary transition-colors">
+                                                    {image.caption}
+                                                </div>
+                                            )}
+                                        </button>
+
+                                        {/* Ambient Doodles rendering */}
+                                        {image.doodle && image.doodle.type === 'arrow' && (
+                                            <DoodleArrow className={image.doodle.className} />
+                                        )}
+                                        {image.doodle && image.doodle.type === 'text' && (
+                                            <div className={image.doodle.className}>{image.doodle.text}</div>
+                                        )}
+                                    </div>
+                                </Reveal>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* 7. THE FUTURE VISION */}
+            <section id="future" className="py-40 px-6 bg-cream relative overflow-hidden border-t border-gray-200">
+                <div className="max-w-5xl mx-auto text-center relative z-10">
+                    <Reveal>
+                        <h2 className="text-6xl md:text-9xl font-black tracking-tighter mb-8 leading-none text-primary">
+                            This Is Only <br />
+                            <span className="text-[#4C6FFF]">The Beginning.</span>
+                        </h2>
+                    </Reveal>
+
+                    <div className="relative max-w-md mx-auto mt-20">
+                        {/* Interactive Hint Annotation (Desktop) */}
+                        <div className="absolute top-[15%] right-full mr-6 lg:mr-10 hidden md:flex flex-col items-end rotate-[-6deg] opacity-90 pointer-events-none w-48 z-20">
+                            <span className="font-handwriting text-2xl text-[#7C5CFF] text-right leading-tight">
+                                Curious?<br />Click a note for the full story
+                            </span>
+                            <DoodleArrow className="w-12 h-12 text-[#7C5CFF] rotate-[20deg] mt-1 mr-8" />
+                        </div>
+
+                        {/* Interactive Hint Annotation (Mobile) */}
+                        <div className="md:hidden flex flex-col items-center mb-10 -mt-6 rotate-[-3deg] opacity-90 pointer-events-none">
+                            <span className="font-handwriting text-xl text-[#7C5CFF]">Curious? Click a note for the full story ↓</span>
+                        </div>
+
+                        <div className="font-handwriting text-2xl text-[#4C6FFF] mb-2">NOW</div>
+                        <svg className="w-full h-8 text-gray-300 mx-auto" viewBox="0 0 20 40" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 5">
+                            <path d="M10,0 L10,40" />
+                        </svg>
+
+                        <div className="flex flex-col items-center gap-6 relative">
+                            {visionPath.map((item, i) => {
+                                const rotation = i % 2 === 0 ? 'rotate-[-4deg]' : 'rotate-[4deg]';
+                                return (
+                                    <React.Fragment key={i}>
+                                        <Reveal delay={i * 120}>
+                                            <StoryTrigger
+                                                onClick={() => setStoryModalData({ ...item, annotation: "Where we're headed" })}
+                                                baseRotation={rotation}
+                                                className="inline-block"
+                                            >
+                                                {/* Passing hoverable={false} since StoryTrigger handles interaction */}
+                                                <StickyNote
+                                                    text={item.text}
+                                                    color={item.color}
+                                                    rotation=""
+                                                    floatClass="animate-float-orbit"
+                                                    hoverable={false}
+                                                    className="px-6 py-3 !text-xl shadow-md"
+                                                />
+                                            </StoryTrigger>
+                                        </Reveal>
+                                        {i < visionPath.length - 1 && (
+                                            <svg className="w-6 h-8 text-gray-300" viewBox="0 0 20 40" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 5">
+                                                <path d="M10,0 L10,40" />
+                                            </svg>
+                                        )}
+                                    </React.Fragment>
+                                );
+                            })}
+                        </div>
+
+                        <svg className="w-full h-8 text-gray-300 mx-auto" viewBox="0 0 20 40" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 5">
+                            <path d="M10,0 L10,40" />
+                        </svg>
+                        <div className="font-handwriting text-2xl text-[#7C5CFF] mt-2">Bigger Events</div>
+                    </div>
+
+                    <p className="font-handwriting text-3xl text-secondary mt-16">Our roadmap for the future.</p>
+                </div>
+            </section>
+
+            {/* 8. THE NEXT CHAPTER */}
+            <section id="next" className="py-40 px-6 bg-paper border-t-8 border-[#4C6FFF] relative">
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-white to-transparent opacity-50"></div>
+                <div className="max-w-4xl mx-auto text-center relative z-10">
+                    <StickyNote text="Your turn!" color="yellow" rotation="rotate-12" className="absolute -top-12 -left-12 z-20 hidden md:flex" hoverable={false} />
+
+                    <Reveal>
+                        <h2 className="text-6xl md:text-8xl font-black tracking-tight mb-8">
+                            The Next Chapter <br />
+                            <span className="relative inline-block mt-2">
+                                Starts With You
+                                <svg className="absolute w-full h-4 -bottom-2 left-0 text-[#7C5CFF]" viewBox="0 0 100 10" preserveAspectRatio="none" stroke="currentColor" strokeWidth="3" fill="none">
+                                    <path d="M0,5 Q50,9 100,2" />
+                                </svg>
+                            </span>
+                        </h2>
+                    </Reveal>
+
+                    <div className="space-y-2 text-2xl md:text-3xl text-secondary font-medium mb-6 mt-12 leading-relaxed">
+                        <p>Every senior was once a fresher.</p>
+                        <p>Every builder started somewhere.</p>
+                        <p className="text-primary font-bold">Maybe your story starts here too.</p>
+                    </div>
+
+                    <p className="font-handwriting text-2xl text-[#4C6FFF] mb-12 rotate-[-1deg]">Go on. Start somewhere.</p>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                        <a href="#registration-url" className="px-10 py-5 bg-[#14162B] text-white text-2xl font-bold rounded-full hover:bg-[#4C6FFF] transition-all hover:scale-105 shadow-2xl shadow-[#4C6FFF]/20 w-full sm:w-auto">
+                            Join Orientation
+                        </a>
+                        <Link to="/roadmaps" className="px-8 py-4 bg-white border-2 border-gray-200 text-primary text-lg font-semibold rounded-full hover:border-[#00B39B] hover:text-[#00B39B] transition-colors w-full sm:w-auto">
+                            Open B.Tech Survival Guide
+                        </Link>
+                    </div>
+
+                    <DoodleArrow className="w-24 h-24 text-[#FFD23F] absolute -bottom-16 right-10 rotate-45 hidden md:block" />
+                </div>
+            </section>
         </div>
-    )
-}
+    );
+};
+
+export default TechHubStory;
