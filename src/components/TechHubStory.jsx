@@ -16,9 +16,33 @@ import ScrollReveal from './ScrollReveal'
 
 import techhubLogo from '../assets/techhub-logo.png'
 
-// Temporary reusable source for founder, early-team, and Hall of Fame portraits.
-// Replace this one path with the real member photo source when assets are ready.
-const MEMBER_PLACEHOLDER = '/placeholder-user.jpg'
+// TEMPORARY: member/founder/hall-of-fame photos are not wired up yet.
+// MEMBER_PLACEHOLDER is a single reusable inline SVG (neutral gradient +
+// silhouette bust) used everywhere a real photo would normally go —
+// founder.photo, earlyTeam[].photo, hallOfFame[].photo. No external URL,
+// no missing-asset risk. Swap it out per-entry once real photos land;
+// every image tag below is left exactly as designed, just pointed at
+// this constant for now.
+const MEMBER_PLACEHOLDER =
+    'data:image/svg+xml;utf8,' +
+    encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="55%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.28" />
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="400" height="500" fill="url(#bg)" />
+  <rect width="400" height="500" fill="url(#glow)" />
+  <circle cx="200" cy="205" r="72" fill="#334155" fill-opacity="0.65" />
+  <path d="M80 460c8-92 76-152 120-152s112 60 120 152z" fill="#334155" fill-opacity="0.65" />
+</svg>`.trim())
 
 // Reused gallery photos — same set as RefinedHome's DriftWall.
 import p1 from '../assets/gallery/p1.jpeg'
@@ -250,7 +274,7 @@ const originStory = [
 ]
 
 const founder = {
-    name: 'Lallu Prasad',
+    name: 'Aditya Kumar Parida',
     role: 'Founding Lead, TechHub',
     photo: MEMBER_PLACEHOLDER,
     quote: 'We didn\u2019t set out to build a club. We set out to build the community we wished existed on our first day.',
