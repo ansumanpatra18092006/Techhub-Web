@@ -53,6 +53,7 @@ import sandeep from "../assets/builders/sandeep.jpeg";
 import adhiraj from "../assets/builders/adhiraj.png";
 import adityaVajpayee from "../assets/builders/aditya-vajpayee.png";
 import ashutosh from "../assets/builders/ashutosh.jpeg";
+import disha from "../assets/builders/disha.png";
 
 // lucide-react 1.0 removed brand/logo icons (Instagram, Linkedin, etc).
 // Lightweight stand-ins in the same stroke style, matching the lucide props API (size, className).
@@ -154,6 +155,7 @@ const builders = [
   { name: 'Aditya Vajpayee', domain: 'Graphics Design', year: '3rd Year', tagline: 'Getting better with every design critique and every project.', photo: adityaVajpayee },
   { name: 'Ashutosh Sahu', domain: 'Web Development', year: '3rd Year', tagline: 'Building applications that real people actually enjoy using.', photo: ashutosh },
   { name: 'Sandeep', domain: 'Management', year: '3rd Year', tagline: 'Keeping plans on track and every event running like clockwork.', photo: sandeep },
+  { name: 'Disha', domain: 'Management', year: '3rd Year', tagline: 'Keeping every plan organized and every teammate in the loop.', photo: disha },
 ]
 function getInitials(name) {
   return name.split(' ').filter(Boolean).slice(0, 3).map((p) => p[0]).join('').toUpperCase()
