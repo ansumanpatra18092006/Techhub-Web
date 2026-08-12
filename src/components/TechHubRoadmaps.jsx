@@ -54,9 +54,9 @@ const overloadChips = [
 ]
 
 const firstYearThoughts = [
-    { expectation: 'I\u2019ll build the next Instagram by second semester.', reality: 'Spent 4 hours fixing one CSS bug.', tone: 'coral', rotate: '-rotate-2' },
-    { expectation: 'I\u2019ll learn AI.', reality: 'First battle: installing Python.', tone: 'sun', rotate: 'rotate-1' },
-    { expectation: 'I\u2019ll start coding tomorrow.', reality: 'Tomorrow never came.', tone: 'mint', rotate: '-rotate-1' },
+    { expectation: 'I’ll build the next Instagram by second semester.', reality: 'Spent 4 hours fixing one CSS bug.', tone: 'coral', rotate: '-rotate-2' },
+    { expectation: 'I’ll learn AI.', reality: 'First battle: installing Python.', tone: 'sun', rotate: 'rotate-1' },
+    { expectation: 'I’ll start coding tomorrow.', reality: 'Tomorrow never came.', tone: 'mint', rotate: '-rotate-1' },
     { expectation: 'My sleep schedule will stay intact.', reality: 'Sleep becomes a rumor a friend told you about.', tone: 'sky', rotate: 'rotate-2' },
 ]
 
@@ -72,17 +72,17 @@ const opportunities = [
 ]
 
 const domains = [
-    { title: 'Web Development', icon: Code2, tone: 'sky', expectation: 'I\u2019ll build the next Instagram.', reality: 'Still centering a div.' },
-    { title: 'AI / ML', icon: BrainCircuit, tone: 'coral', expectation: 'I\u2019ll build Jarvis.', reality: 'Training a model 8 hours for +0.3% accuracy.' },
-    { title: 'Cybersecurity', icon: ShieldCheck, tone: 'mint', expectation: 'I\u2019ll become a hacker.', reality: 'First, learn networking. All of it.' },
+    { title: 'Web Development', icon: Code2, tone: 'sky', expectation: 'I’ll build the next Instagram.', reality: 'Still centering a div.' },
+    { title: 'AI / ML', icon: BrainCircuit, tone: 'coral', expectation: 'I’ll build Jarvis.', reality: 'Training a model 8 hours for +0.3% accuracy.' },
+    { title: 'Cybersecurity', icon: ShieldCheck, tone: 'mint', expectation: 'I’ll become a hacker.', reality: 'First, learn networking. All of it.' },
     { title: 'Data Science', icon: BarChart3, tone: 'sun', expectation: 'AI magic.', reality: 'Cleaning Excel sheets. So much cleaning.' },
     { title: 'UI / UX', icon: Palette, tone: 'sky', expectation: 'Designing the future.', reality: 'Choosing between two shades of blue.' },
     { title: 'Management', icon: Briefcase, tone: 'coral', expectation: 'Leadership.', reality: 'Convincing people to reply in the group.' },
 ]
 
 const cgpaProfiles = [
-    { name: 'Student A', tone: 'coral', cgpa: '9.8', skills: 'None', line: 'Interviewer: \u201cSo what have you built?\u201d', mood: 'facepalm' },
-    { name: 'Student B', tone: 'sun', cgpa: '5.5', skills: 'Excellent', line: 'Placement Cell: \u201cMinimum 7 CGPA required.\u201d', mood: 'shrug' },
+    { name: 'Student A', tone: 'coral', cgpa: '9.8', skills: 'None', line: 'Interviewer: “So what have you built?”', mood: 'facepalm' },
+    { name: 'Student B', tone: 'sun', cgpa: '5.5', skills: 'Excellent', line: 'Placement Cell: “Minimum 7 CGPA required.”', mood: 'shrug' },
     { name: 'Student C', tone: 'mint', cgpa: '8+', skills: 'Strong', line: 'Outcome: best balance. Clears every filter.', mood: 'proud', winner: true },
 ]
 
@@ -113,7 +113,7 @@ const stories = [
     { title: 'Hackathons Won', icon: Trophy, tone: 'sun', line: 'Late nights, free t-shirts, and a surprising number of trophies.' },
     { title: 'Internships Landed', icon: Briefcase, tone: 'sky', line: 'Yes, as first- and second-years. It happens more than you think.' },
     { title: 'Projects Shipped', icon: Hammer, tone: 'mint', line: 'Real, ugly, working projects — the kind recruiters actually ask about.' },
-    { title: 'Leadership Taken On', icon: Flag, tone: 'coral', line: 'Running events, teams, and budgets before anyone \u201cqualified\u201d them to.' },
+    { title: 'Leadership Taken On', icon: Flag, tone: 'coral', line: 'Running events, teams, and budgets before anyone “qualified” them to.' },
     { title: 'Open Source Merged', icon: GitBranch, tone: 'sun', line: 'Pull requests accepted into projects used by strangers worldwide.' },
     { title: 'Startups Started', icon: Rocket, tone: 'sky', line: 'From hostel-room idea to an actual thing people signed up for.' },
 ]
@@ -295,7 +295,7 @@ export default function TechHubRoadmaps() {
                                 </Link>
                             </div>
                         </ScrollReveal>
-                        <ScrollReveal delay={0}><Eyebrow>TechHub Orientation \u00b7 A Senior Special</Eyebrow></ScrollReveal>
+                        <ScrollReveal delay={0}><Eyebrow>TechHub Orientation · A Senior Special</Eyebrow></ScrollReveal>
                         <ScrollReveal delay={80}>
                             <h1 className="mt-7 font-display text-5xl font-bold leading-[1.02] tracking-tight text-ink sm:text-7xl lg:text-8xl">
                                 Nobody Tells You<br /><span className="text-[#4C6FFF]">This</span> About Engineering
@@ -339,7 +339,7 @@ export default function TechHubRoadmaps() {
                 {/* ------------------------------------------------------ Section 3: Branch Doesn't Decide Your Future */}
                 <section className="border-t border-ink/[.07] px-5 py-20 sm:px-8 sm:py-28">
                     <div className="mx-auto max-w-5xl text-center">
-                        <SectionTitle eyebrow="Say it louder for the back row" title="Your Branch Doesn\u2019t Decide Your Future" align="center" />
+                        <SectionTitle eyebrow="Say it louder for the back row" title="Your Branch Doesn’t Decide Your Future" align="center" />
                         <ScrollReveal delay={80}>
                             <div className="flex flex-wrap items-center justify-center gap-3">
                                 {branches.map((b) => <Chip key={b} label={b} tone="sky" />)}
@@ -415,7 +415,7 @@ export default function TechHubRoadmaps() {
                         </div>
                         <ScrollReveal delay={280}>
                             <p className="mx-auto mt-12 max-w-md text-center font-display text-2xl font-semibold text-ink">
-                                Don\u2019t ignore academics. Don\u2019t ignore skills.<br /><span className="text-[#00B39B]">Balance wins.</span>
+                                Don’t ignore academics. Don’t ignore skills.<br /><span className="text-[#00B39B]">Balance wins.</span>
                             </p>
                         </ScrollReveal>
                     </div>
@@ -425,7 +425,7 @@ export default function TechHubRoadmaps() {
                 <section className="border-t border-ink/[.07] bg-ink px-5 py-20 sm:px-8 sm:py-28">
                     <div className="mx-auto max-w-6xl">
                         <div className="mb-14 max-w-3xl">
-                            <Eyebrow>Straight from people who\u2019ve lived it</Eyebrow>
+                            <Eyebrow>Straight from people who’ve lived it</Eyebrow>
                             <h2 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl">Things Seniors Regret</h2>
                         </div>
                         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -507,7 +507,7 @@ export default function TechHubRoadmaps() {
                                 )
                             })}
                         </div>
-                        <p className="mt-6 text-center text-xs text-ink/35">Swap these placeholders for real photos and names from the club\u2019s achievement wall.</p>
+                        <p className="mt-6 text-center text-xs text-ink/35">Swap these placeholders for real photos and names from the club’s achievement wall.</p>
                     </div>
                 </section>
 
