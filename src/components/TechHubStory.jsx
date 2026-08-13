@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
+// --- ASSETS ---
+import techhubLogo from '../assets/techhub-logo.png';
+
 // --- ALUMNI ASSETS (SUPER SENIORS) ---
 import lallu from '../assets/builders/lallu.jpeg';
 import aparajita from '../assets/builders/aparajita.jpeg';
@@ -9,6 +12,8 @@ import akankshya from '../assets/builders/akankshya.jpeg';
 import rashmita from '../assets/builders/rashmita.jpeg';
 import kanhu from '../assets/builders/kanhu.jpeg';
 import rashmi from '../assets/builders/rashmi.jpeg';
+import kapileswar from '../assets/builders/kapileswar.jpeg';
+import manav from '../assets/builders/manav.jpeg';
 
 // --- ACHIEVEMENT BUILDER ASSETS ---
 import ansuman from '../assets/builders/ansuman.jpeg';
@@ -59,7 +64,7 @@ const superSeniors = [
         photo: aparajita,
         company: 'Omega Healthcare Solutions',
         designation: '',
-        wrapperClass: 'flex justify-center lg:justify-end items-end lg:col-start-1 lg:row-start-1 z-20',
+        wrapperClass: 'flex justify-center lg:justify-end items-end lg:col-start-1 lg:row-start-1 z-20 lg:translate-x-4 lg:translate-y-6',
         cardClass: 'bg-white p-3 shadow-xl rotate-[3deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
         tapeClass: 'top-[-10px] left-8 rotate-[-3deg] w-16 lg:w-20',
         imgClass: 'w-full h-56 lg:h-52 xl:h-60 object-cover bg-gray-100 mb-4 filter contrast-125 grayscale-[20%]',
@@ -71,23 +76,11 @@ const superSeniors = [
         photo: arvind,
         company: 'Omega Healthcare Management Services',
         designation: '',
-        wrapperClass: 'flex justify-center lg:justify-end items-start lg:col-start-1 lg:row-start-3 z-20',
+        wrapperClass: 'flex justify-center lg:justify-center items-end lg:col-start-2 lg:row-start-1 z-20 lg:translate-y-4',
         cardClass: 'bg-white p-3 shadow-xl rotate-[-3deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
         tapeClass: 'top-[-10px] right-8 rotate-[4deg] w-20 lg:w-24',
         imgClass: 'w-full h-56 lg:h-52 xl:h-56 object-cover bg-gray-100 mb-4',
         textClass: 'text-[#4C6FFF]'
-    },
-    {
-        name: 'Rashmi Ranjan Badjena',
-        role: 'Early Team',
-        photo: rashmi,
-        company: 'TCS',
-        designation: '',
-        wrapperClass: 'flex justify-center lg:justify-end items-center lg:col-start-1 lg:row-start-2 z-10',
-        cardClass: 'bg-white p-3 shadow-xl rotate-[2deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
-        tapeClass: 'top-[-8px] left-1/2 -translate-x-1/2 rotate-[-2deg] w-16 lg:w-20',
-        imgClass: 'w-full h-52 lg:h-48 xl:h-52 object-cover bg-gray-100 mb-4',
-        textClass: 'text-[#FFD23F]'
     },
     {
         name: 'Akankshya Jena',
@@ -95,11 +88,23 @@ const superSeniors = [
         photo: akankshya,
         company: 'Ipsos',
         designation: 'Market Research Analyst',
-        wrapperClass: 'flex justify-center lg:justify-start items-end lg:col-start-3 lg:row-start-1 z-20',
+        wrapperClass: 'flex justify-center lg:justify-start items-end lg:col-start-3 lg:row-start-1 z-20 lg:-translate-x-4 lg:translate-y-6',
         cardClass: 'bg-white p-3 shadow-xl rotate-[-2deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
         tapeClass: 'top-[-8px] left-4 rotate-[-2deg] w-16 lg:w-20',
         imgClass: 'w-full h-60 lg:h-56 xl:h-60 object-cover bg-gray-100 mb-4',
         textClass: 'text-[#FF5D5D]'
+    },
+    {
+        name: 'Rashmi Ranjan Badjena',
+        role: 'Early Team',
+        photo: rashmi,
+        company: 'TCS',
+        designation: '',
+        wrapperClass: 'flex justify-center lg:justify-end items-center lg:col-start-1 lg:row-start-2 z-10 lg:translate-x-8',
+        cardClass: 'bg-white p-3 shadow-xl rotate-[2deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
+        tapeClass: 'top-[-8px] left-1/2 -translate-x-1/2 rotate-[-2deg] w-16 lg:w-20',
+        imgClass: 'w-full h-52 lg:h-48 xl:h-52 object-cover bg-gray-100 mb-4',
+        textClass: 'text-[#FFD23F]'
     },
     {
         name: 'Simadri Rashmita',
@@ -107,7 +112,7 @@ const superSeniors = [
         photo: rashmita,
         company: 'Sambal Infratech',
         designation: '',
-        wrapperClass: 'flex justify-center lg:justify-start items-center lg:col-start-3 lg:row-start-2 z-10',
+        wrapperClass: 'flex justify-center lg:justify-start items-center lg:col-start-3 lg:row-start-2 z-10 lg:-translate-x-8',
         cardClass: 'bg-white p-3 shadow-xl rotate-[4deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
         tapeClass: 'top-[-10px] left-1/2 -translate-x-1/2 rotate-[-4deg] w-20 lg:w-24',
         imgClass: 'w-full h-52 lg:h-48 xl:h-52 object-cover bg-gray-100 mb-4',
@@ -119,11 +124,35 @@ const superSeniors = [
         photo: kanhu,
         company: 'Upgrad',
         designation: '',
-        wrapperClass: 'flex justify-center lg:justify-start items-start lg:col-start-3 lg:row-start-3 z-20',
+        wrapperClass: 'flex justify-center lg:justify-end items-start lg:col-start-1 lg:row-start-3 z-20 lg:translate-x-4 lg:-translate-y-6',
         cardClass: 'bg-white p-3 shadow-xl rotate-[-4deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
         tapeClass: 'top-[-5px] right-4 rotate-[5deg] w-16 lg:w-20',
         imgClass: 'w-full h-56 lg:h-52 xl:h-56 object-cover bg-gray-100 mb-4',
         textClass: 'text-[#00B39B] drop-shadow-sm'
+    },
+    {
+        name: 'Kapileswar Patra',
+        role: 'Early Team',
+        photo: kapileswar,
+        company: 'ITC INFOTECH  and CAVISSON SYSTEMS',
+        designation: '',
+        wrapperClass: 'flex justify-center lg:justify-center items-start lg:col-start-2 lg:row-start-3 z-20 lg:-translate-y-4',
+        cardClass: 'bg-white p-3 shadow-xl rotate-[1deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
+        tapeClass: 'top-[-8px] left-1/2 -translate-x-1/2 rotate-[1deg] w-16 lg:w-20',
+        imgClass: 'w-full h-56 lg:h-52 xl:h-56 object-cover bg-gray-100 mb-4',
+        textClass: 'text-[#FFD23F] drop-shadow-sm'
+    },
+    {
+        name: 'Manav Das',
+        role: 'Early Team',
+        photo: manav,
+        company: 'IMS Group',
+        designation: '',
+        wrapperClass: 'flex justify-center lg:justify-start items-start lg:col-start-3 lg:row-start-3 z-20 lg:-translate-x-4 lg:-translate-y-6',
+        cardClass: 'bg-white p-3 shadow-xl rotate-[3deg] border border-gray-100 relative transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-50 w-full max-w-[280px] lg:max-w-[240px] xl:max-w-[270px]',
+        tapeClass: 'top-[-10px] left-8 rotate-[-3deg] w-16 lg:w-20',
+        imgClass: 'w-full h-56 lg:h-52 xl:h-56 object-cover bg-gray-100 mb-4',
+        textClass: 'text-[#00B39B]'
     }
 ];
 
@@ -679,7 +708,7 @@ const TechHubStory = () => {
             {/* HEADER NAVIGATION */}
             <nav className="fixed top-0 left-0 right-0 p-6 flex justify-between items-center z-50 bg-paper/80 backdrop-blur-md border-b border-gray-100">
                 <Link to="/" className="text-2xl font-black tracking-tighter text-primary flex items-center gap-2">
-                    <span className="w-8 h-8 bg-[#4C6FFF] text-white rounded-lg flex items-center justify-center text-sm">TH</span>
+                    <img src={techhubLogo} alt="TechHub logo" className="h-10 w-auto object-contain" />
                     TechHub
                 </Link>
                 <div className="flex gap-4 items-center">
@@ -835,6 +864,8 @@ const TechHubStory = () => {
                             <path d="M400,230 C480,150 600,100 650,70" />
                             <path d="M400,230 C500,280 600,340 640,370" />
                             <path d="M400,230 C520,230 640,210 720,220" />
+                            <path d="M400,230 C380,300 420,360 400,420" />
+                            <path d="M400,230 C420,160 380,100 400,40" />
                         </svg>
 
                         <div className="z-10 text-center bg-white p-8 rounded-full shadow-xl border-4 border-[#4C6FFF] rotate-[-2deg] transition-transform duration-300 hover:rotate-0 hover:scale-105">
@@ -843,19 +874,23 @@ const TechHubStory = () => {
                             <div className="font-handwriting text-lg text-secondary mt-2 -rotate-1">Day 1</div>
                         </div>
 
-                        <StickyNote text="Aparajita" color="white" rotation="rotate-[6deg]" className="absolute top-6 left-[18%] md:left-[12%] z-20 font-bold !text-xl px-6 py-2" />
+                        <StickyNote text="Aparajita" color="white" rotation="rotate-[6deg]" className="absolute top-6 left-[15%] md:left-[10%] z-20 font-bold !text-xl px-6 py-2" />
                         <div className="absolute top-0 left-[24%] font-handwriting text-lg text-secondary rotate-[-6deg] z-20 hidden md:block">First team</div>
 
-                        <StickyNote text="Arvind" color="white" rotation="rotate-[-4deg]" className="absolute bottom-12 left-[15%] md:left-[18%] z-20 font-bold !text-xl px-6 py-2" />
+                        <StickyNote text="Manav Das" color="white" rotation="rotate-[-2deg]" className="absolute top-2 left-1/2 -translate-x-1/2 z-20 font-bold !text-xl px-6 py-2" />
 
-                        <StickyNote text="Rashmi" color="white" rotation="rotate-[5deg]" className="absolute top-1/2 -translate-y-1/2 left-[5%] md:left-[8%] z-20 font-bold !text-xl px-6 py-2" />
-
-                        <StickyNote text="Akankshya" color="white" rotation="rotate-[3deg]" className="absolute top-10 right-[18%] md:right-[15%] z-20 font-bold !text-xl px-6 py-2" />
+                        <StickyNote text="Akankshya" color="white" rotation="rotate-[3deg]" className="absolute top-8 right-[15%] md:right-[10%] z-20 font-bold !text-xl px-6 py-2" />
                         <div className="absolute top-4 right-[25%] font-handwriting text-lg text-secondary rotate-[6deg] z-20 hidden md:block">Built from scratch</div>
 
-                        <StickyNote text="Rashmita" color="white" rotation="rotate-[-5deg]" className="absolute bottom-12 right-[15%] md:right-[18%] z-20 font-bold !text-xl px-6 py-2" />
+                        <StickyNote text="Rashmi" color="white" rotation="rotate-[5deg]" className="absolute top-[42%] -translate-y-1/2 left-[2%] md:left-[5%] z-20 font-bold !text-xl px-6 py-2" />
 
-                        <StickyNote text="Kanhu" color="white" rotation="rotate-[8deg]" className="absolute top-1/2 -translate-y-1/2 right-[5%] md:right-[8%] z-20 font-bold !text-xl px-6 py-2" />
+                        <StickyNote text="Rashmita" color="white" rotation="rotate-[-5deg]" className="absolute top-[55%] -translate-y-1/2 right-[2%] md:right-[5%] z-20 font-bold !text-xl px-6 py-2" />
+
+                        <StickyNote text="Arvind" color="white" rotation="rotate-[-4deg]" className="absolute bottom-12 left-[15%] md:left-[12%] z-20 font-bold !text-xl px-6 py-2" />
+
+                        <StickyNote text="Kapileswar" color="white" rotation="rotate-[2deg]" className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 font-bold !text-xl px-6 py-2" />
+
+                        <StickyNote text="Kanhu" color="white" rotation="rotate-[8deg]" className="absolute bottom-10 right-[15%] md:right-[12%] z-20 font-bold !text-xl px-6 py-2" />
 
                         <div className="absolute top-[-10px] right-1/2 translate-x-[40%] font-handwriting text-3xl text-[#00B39B] rotate-[-12deg]">The Original Squad!</div>
                     </Reveal>
